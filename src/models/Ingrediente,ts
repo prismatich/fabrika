@@ -1,0 +1,51 @@
+// src/models/Ingrediente.ts
+import mongoose, { Schema, Document } from 'mongoose';
+
+export interface IIngrediente extends Document {
+  nombre: string;
+  descripcion: string;
+  proveedor: string;
+  stock: number;
+  categoria: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const IngredienteSchema: Schema = new Schema({
+  nombre: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    trim: true 
+  },
+  descripcion: { 
+    type: String, 
+    required: true,
+    trim: true 
+  },
+  proveedor: { 
+    type: String, 
+    required: true,
+    trim: true 
+  },
+  stock: { 
+    type: Number, 
+    required: true, 
+    min: 0,
+    default: 0 
+  },
+  categoria: { 
+    type: String, 
+    required: true,
+    trim: true 
+  },
+}, {
+  timestamps: true
+});
+
+IngredienteSchema.index({ nombre: 1 });
+IngredienteSchema.index({ categoria: 1 });
+IngredienteSchema.index({ proveedor: 1 });
+IngredienteSchema.index({ stock: 1 });
+
+export const Ingrediente = mongoose.models.Ingrediente || mongoose.model<IIngrediente>('Ingrediente', IngredienteSchema);
