@@ -1,80 +1,61 @@
-// src/models/Log.ts
-import mongoose, { Schema, Document, Types } from 'mongoose';
+// src/models/Logs.ts
+import { prop, getModelForClass, modelOptions, Severity, index, Ref } from '@typegoose/typegoose';
+import { User } from './User';
 
-export interface ILog extends Document {
-  nivel: 'info' | 'warning' | 'error' | 'debug';
-  mensaje: string;
-  modulo: string;
-  accion: string;
-  usuario?: Types.ObjectId;
-  entidad?: {
+@modelOptions({
+  schemaOptions: {
+    collection: 'logs',
+    timestamps: true
+  },
+  options: {
+    allowMixed: Severity.ALLOW
+  }
+})
+@index({ nivel: 1 })
+@index({ modulo: 1 })
+@index({ accion: 1 })
+@index({ usuario: 1 })
+@index({ createdAt: -1 })
+@index({ 'entidad.tipo': 1, 'entidad.id': 1 })
+export class Log {
+  @prop({ required: true, enum: ['info', 'warning', 'error', 'debug'], default: 'info' })
+  public nivel!: 'info' | 'warning' | 'error' | 'debug';
+
+  @prop({ required: true, trim: true })
+  public mensaje!: string;
+
+  @prop({ required: true, trim: true })
+  public modulo!: string;
+
+  @prop({ required: true, trim: true })
+  public accion!: string;
+
+  @prop({ ref: () => User })
+  public usuario?: Ref<User>;
+
+  @prop({
+    tipo: { type: String, trim: true },
+    id: { type: String }
+  })
+  public entidad?: {
     tipo: string;
-    id: Types.ObjectId;
+    id: string;
   };
-  datosAdicionales?: Record<string, any>;
-  ip?: string;
-  userAgent?: string;
-  createdAt: Date;
+
+  @prop({ type: () => Object })
+  public datosAdicionales?: Record<string, any>;
+
+  @prop({ trim: true })
+  public ip?: string;
+
+  @prop({ trim: true })
+  public userAgent?: string;
+
+  @prop({ default: Date.now })
+  public createdAt!: Date;
+
+  @prop({ default: Date.now })
+  public updatedAt!: Date;
 }
 
-const LogSchema: Schema = new Schema({
-  nivel: { 
-    type: String, 
-    required: true, 
-    enum: ['info', 'warning', 'error', 'debug'],
-    default: 'info'
-  },
-  mensaje: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  modulo: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  accion: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  usuario: { 
-    type: Schema.Types.ObjectId, 
-    ref: 'User' 
-  },
-  entidad: {
-    tipo: { 
-      type: String, 
-      trim: true 
-    },
-    id: { 
-      type: Schema.Types.ObjectId 
-    }
-  },
-  datosAdicionales: { 
-    type: Schema.Types.Mixed 
-  },
-  ip: { 
-    type: String,
-    trim: true 
-  },
-  userAgent: { 
-    type: String,
-    trim: true 
-  }
-}, {
-  timestamps: true
-});
-
-
-LogSchema.index({ nivel: 1 });
-LogSchema.index({ modulo: 1 });
-LogSchema.index({ accion: 1 });
-LogSchema.index({ usuario: 1 });
-LogSchema.index({ createdAt: -1 });
-LogSchema.index({ 'entidad.tipo': 1, 'entidad.id': 1 });
-
-
-
-export const Log = mongoose.models.Log || mongoose.model<ILog>('Log', LogSchema);
+export const LogModel = getModelForClass(Log);

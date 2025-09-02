@@ -1,51 +1,40 @@
 // src/models/Ingrediente.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 
-export interface IIngrediente extends Document {
-  nombre: string;
-  descripcion: string;
-  proveedor: string;
-  stock: number;
-  categoria: string;
-  createdAt: Date;
-  updatedAt: Date;
+@modelOptions({
+  schemaOptions: {
+    collection: 'ingredientes',
+    timestamps: true
+  },
+  options: {
+    allowMixed: Severity.ALLOW
+  }
+})
+@index({ nombre: 1 })
+@index({ categoria: 1 })
+@index({ proveedor: 1 })
+@index({ stock: 1 })
+export class Ingrediente {
+  @prop({ required: true, unique: true, trim: true })
+  public nombre!: string;
+
+  @prop({ required: true, trim: true })
+  public descripcion!: string;
+
+  @prop({ required: true, trim: true })
+  public proveedor!: string;
+
+  @prop({ required: true, min: 0, default: 0 })
+  public stock!: number;
+
+  @prop({ required: true, trim: true })
+  public categoria!: string;
+
+  @prop({ default: Date.now })
+  public createdAt!: Date;
+
+  @prop({ default: Date.now })
+  public updatedAt!: Date;
 }
 
-const IngredienteSchema: Schema = new Schema({
-  nombre: { 
-    type: String, 
-    required: true, 
-    unique: true,
-    trim: true 
-  },
-  descripcion: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  proveedor: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  stock: { 
-    type: Number, 
-    required: true, 
-    min: 0,
-    default: 0 
-  },
-  categoria: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-}, {
-  timestamps: true
-});
-
-IngredienteSchema.index({ nombre: 1 });
-IngredienteSchema.index({ categoria: 1 });
-IngredienteSchema.index({ proveedor: 1 });
-IngredienteSchema.index({ stock: 1 });
-
-export const Ingrediente = mongoose.models.Ingrediente || mongoose.model<IIngrediente>('Ingrediente', IngredienteSchema);
+export const IngredienteModel = getModelForClass(Ingrediente);

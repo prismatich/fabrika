@@ -1,101 +1,72 @@
-// src/models/Log.ts
-import mongoose, { Schema, Document, Types } from 'mongoose';
+// src/models/Receta.ts
+import { prop, getModelForClass, modelOptions, Severity, index, Ref } from '@typegoose/typegoose';
+import { User } from './User';
+import { Ingrediente } from './Ingrediente,ts';
 
-export interface ILog extends Document {
-  nivel: 'info' | 'warning' | 'error' | 'debug';
-  mensaje: string;
-  modulo: string;
-  accion: string;
-  usuario?: Types.ObjectId;
-  entidad?: {
-    tipo: string;
-    id: Types.ObjectId;
-  };
-  datosAdicionales?: Record<string, any>;
-  ip?: string;
-  userAgent?: string;
-  createdAt: Date;
+@modelOptions({
+  schemaOptions: {
+    collection: 'recetas',
+    timestamps: true
+  },
+  options: {
+    allowMixed: Severity.ALLOW
+  }
+})
+@index({ nombre: 1 })
+@index({ categoria: 1 })
+@index({ dificultad: 1 })
+@index({ tiempoPreparacion: 1 })
+export class Receta {
+  @prop({ required: true, unique: true, trim: true })
+  public nombre!: string;
+
+  @prop({ required: true, trim: true })
+  public descripcion!: string;
+
+  @prop({ required: true, trim: true })
+  public instrucciones!: string;
+
+  @prop({ required: true, enum: ['facil', 'medio', 'dificil'], default: 'medio' })
+  public dificultad!: 'facil' | 'medio' | 'dificil';
+
+  @prop({ required: true, min: 1 })
+  public tiempoPreparacion!: number; // en minutos
+
+  @prop({ required: true, min: 1 })
+  public porciones!: number;
+
+  @prop({ required: true, trim: true })
+  public categoria!: string;
+
+  @prop({ type: () => [String], trim: true })
+  public tags?: string[];
+
+  @prop({ type: () => [String], trim: true })
+  public alergenos?: string[];
+
+  @prop({ type: () => [String], trim: true })
+  public utensilios?: string[];
+
+  @prop({ type: () => [String], trim: true })
+  public tecnicas?: string[];
+
+  @prop({ ref: () => User })
+  public creador?: Ref<User>;
+
+  @prop({ default: true })
+  public activa!: boolean;
+
+  @prop({ default: 0 })
+  public calificacionPromedio!: number;
+
+  @prop({ default: 0 })
+  public numeroCalificaciones!: number;
+
+  @prop({ default: Date.now })
+  public createdAt!: Date;
+
+  @prop({ default: Date.now })
+  public updatedAt!: Date;
 }
 
-const LogSchema: Schema = new Schema({
-  nivel: { 
-    type: String, 
-    required: true, 
-    enum: ['info', 'warning', 'error', 'debug'],
-    default: 'info'
-  },
-  mensaje: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  modulo: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  accion: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  usuario: { 
-    type: Schema.Types.ObjectId, 
-    ref: 'User' 
-  },
-  entidad: {
-    tipo: { 
-      type: String, 
-      trim: true 
-    },
-    id: { 
-      type: Schema.Types.ObjectId 
-    }
-  },
-  datosAdicionales: { 
-    type: Schema.Types.Mixed 
-  },
-  ip: { 
-    type: String,
-    trim: true 
-  },
-  userAgent: { 
-    type: String,
-    trim: true 
-  }
-}, {
-  timestamps: true
-});
-
-// Índices para mejorar el rendimiento de las consultas
-LogSchema.index({ nivel: 1 });
-LogSchema.index({ modulo: 1 });
-LogSchema.index({ accion: 1 });
-LogSchema.index({ usuario: 1 });
-LogSchema.index({ createdAt: -1 });
-LogSchema.index({ 'entidad.tipo': 1, 'entidad.id': 1 });
-
-// Método estático para crear logs de manera conveniente
-LogSchema.statics.crearLog = function(
-  nivel: 'info' | 'warning' | 'error' | 'debug',
-  mensaje: string,
-  modulo: string,
-  accion: string,
-  opciones: {
-    usuario?: Types.ObjectId;
-    entidad?: { tipo: string; id: Types.ObjectId };
-    datosAdicionales?: Record<string, any>;
-    ip?: string;
-    userAgent?: string;
-  } = {}
-) {
-  return this.create({
-    nivel,
-    mensaje,
-    modulo,
-    accion,
-    ...opciones
-  });
-};
-
-export const Log = mongoose.models.Log || mongoose.model<ILog>('Log', LogSchema);
+export const RecetaModel = getModelForClass(Receta); 

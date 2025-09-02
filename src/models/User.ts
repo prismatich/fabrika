@@ -1,22 +1,30 @@
 // src/models/User.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import { prop, getModelForClass, modelOptions, Severity } from '@typegoose/typegoose';
 
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  refreshToken?: string;
-  lastLogin?: Date;
-  createdAt: Date;
+@modelOptions({
+  schemaOptions: {
+    collection: 'users',
+    timestamps: true
+  },
+  options: {
+    allowMixed: Severity.ALLOW
+  }
+})
+export class User {
+  @prop({ required: true, trim: true })
+  public name!: string;
+
+  @prop({ required: true, unique: true, trim: true, lowercase: true })
+  public email!: string;
+
+  @prop({ required: true })
+  public password!: string;
+
+  @prop()
+  public lastLogin?: Date;
+
+  @prop({ default: Date.now })
+  public createdAt!: Date;
 }
 
-const UserSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  refreshToken: { type: String },
-  lastLogin: { type: Date },
-  createdAt: { type: Date, default: Date.now }
-});
-
-export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+export const UserModel = getModelForClass(User);
