@@ -9,6 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.13.0"
+    "@typegoose/typegoose": "^12.19.0",
+    "astro": "^5.13.0",
+    "mongoose": "^8.18.0"
   }
 }

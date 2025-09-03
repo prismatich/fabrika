@@ -1,5 +1,5 @@
 // src/models/Logs.ts
-import { prop, getModelForClass, modelOptions, Severity, index, Ref } from '@typegoose/typegoose';
+import { prop, getModelForClass, modelOptions, Severity, index, type Ref } from '@typegoose/typegoose';
 import { User } from './User';
 
 @modelOptions({
@@ -50,12 +50,6 @@ export class Log {
 
   @prop({ trim: true })
   public userAgent?: string;
-
-  @prop({ default: Date.now })
-  public createdAt!: Date;
-
-  @prop({ default: Date.now })
-  public updatedAt!: Date;
 }
 
 export const LogModel = getModelForClass(Log);

@@ -29,12 +29,6 @@ export class Ingrediente {
 
   @prop({ required: true, trim: true })
   public categoria!: string;
-
-  @prop({ default: Date.now })
-  public createdAt!: Date;
-
-  @prop({ default: Date.now })
-  public updatedAt!: Date;
 }
 
 export const IngredienteModel = getModelForClass(Ingrediente);

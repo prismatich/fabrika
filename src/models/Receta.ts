@@ -1,7 +1,7 @@
 // src/models/Receta.ts
 import { prop, getModelForClass, modelOptions, Severity, index, Ref } from '@typegoose/typegoose';
 import { User } from './User';
-import { Ingrediente } from './Ingrediente,ts';
+import { Ingrediente } from './Ingrediente.ts';
 
 @modelOptions({
   schemaOptions: {
