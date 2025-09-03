@@ -2,21 +2,21 @@ import React from "react";
 
 const Login: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b* from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient_* from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
       <div className="flex w-[900px] h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-white">
         {/* Lado izquierdo con imagen */}
         <div
           className="flex-1"
           style={{
-            backgroundImage: "url('/login.png')", // 
+            backgroundImage: "url('/login.png')", // 👈 coloca tu imagen en /public/login.png
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         ></div>
 
-
-        <div className="flex-1 flex flex-col justify-center items-center p-10">
-          <h1 className="text-3xl font-bold mb-8">Login</h1>
+        {/* Lado derecho con formulario */}
+        <div className="flex-1 flex flex-col justify-center items-center p-5">
+          <h1 className="text-4xl font-bold mb-8">Login</h1>
 
           <form
             className="w-full max-w-sm space-y-5"
@@ -29,6 +29,7 @@ const Login: React.FC = () => {
               <input
                 type="text"
                 placeholder="Username"
+                aria-placeholder="escribe tu nombre de usuario"
                 className="w-full p-3 rounded-xl border border-gray-300 outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
@@ -56,7 +57,7 @@ const Login: React.FC = () => {
               type="submit"
               className="w-full p-3 bg-black text-white rounded-xl hover:bg-gray-800 transition"
             >
-
+              Ingresar
             </button>
           </form>
         </div>
