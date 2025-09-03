@@ -2,19 +2,18 @@ import React from "react";
 
 const Login: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient_* from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient_* from-[#0D1215]  to-[#2497B4]">
       <div className="flex w-[900px] h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-white">
-        {/* Lado izquierdo con imagen */}
+
         <div
           className="flex-1"
           style={{
-            backgroundImage: "url('/login.png')", // 👈 coloca tu imagen en /public/login.png
+            backgroundImage: "url('/login.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         ></div>
 
-        {/* Lado derecho con formulario */}
         <div className="flex-1 flex flex-col justify-center items-center p-5">
           <h1 className="text-4xl font-bold mb-8">Login</h1>
 
