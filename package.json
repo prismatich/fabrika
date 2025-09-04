@@ -12,6 +12,7 @@
     "@astrojs/react": "^4.3.0",
     "@heroui/button": "^2.2.25",
     "@heroui/checkbox": "^2.3.25",
+    "@heroui/input": "^2.4.26",
     "@heroui/react": "^2.8.3",
     "@heroui/system": "2.4.21",
     "@heroui/theme": "2.4.21",

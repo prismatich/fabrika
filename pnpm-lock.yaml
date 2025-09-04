@@ -17,6 +17,9 @@ importers:
       '@heroui/checkbox':
         specifier: ^2.3.25
         version: 2.3.25(@heroui/system@2.4.21(@heroui/theme@2.4.21(tailwindcss@4.1.12))(framer-motion@12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@heroui/theme@2.4.21(tailwindcss@4.1.12))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@heroui/input':
+        specifier: ^2.4.26
+        version: 2.4.26(@heroui/system@2.4.21(@heroui/theme@2.4.21(tailwindcss@4.1.12))(framer-motion@12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@heroui/theme@2.4.21(tailwindcss@4.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@heroui/react':
         specifier: ^2.8.3
         version: 2.8.3(@types/react@19.1.12)(framer-motion@12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(tailwindcss@4.1.12)
