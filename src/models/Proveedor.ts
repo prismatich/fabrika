@@ -29,12 +29,6 @@ export class Proveedor {
   @prop({ trim: true })
   public ciudad?: string;
 
-  @prop({ trim: true })
-  public pais?: string;
-
-  @prop({ trim: true })
-  public codigoPostal?: string;
-
   @prop({ default: true })
   public activo!: boolean;
 

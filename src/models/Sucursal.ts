@@ -26,12 +26,6 @@ export class Sucursal {
   @prop({ required: true, trim: true })
   public ciudad!: string;
 
-  @prop({ required: true, trim: true })
-  public pais!: string;
-
-  @prop({ trim: true })
-  public codigoPostal?: string;
-
   @prop({ trim: true })
   public telefono?: string;
 

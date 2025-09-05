@@ -26,9 +26,6 @@ export class Receta {
   @prop({ required: true, trim: true })
   public instrucciones!: string;
 
-  @prop({ required: true, enum: ['facil', 'medio', 'dificil'], default: 'medio' })
-  public dificultad!: 'facil' | 'medio' | 'dificil';
-
   @prop({ required: true, min: 1 })
   public tiempoPreparacion!: number; // en minutos
 
@@ -38,29 +35,14 @@ export class Receta {
   @prop({ required: true, trim: true })
   public categoria!: string;
 
-  @prop({ type: () => [String], trim: true })
-  public tags?: string[];
-
-  @prop({ type: () => [String], trim: true })
-  public alergenos?: string[];
-
-  @prop({ type: () => [String], trim: true })
-  public utensilios?: string[];
-
-  @prop({ type: () => [String], trim: true })
-  public tecnicas?: string[];
-
   @prop({ ref: () => User })
   public creador?: Ref<User>;
 
   @prop({ default: true })
   public activa!: boolean;
 
-  @prop({ default: 0 })
-  public calificacionPromedio!: number;
-
-  @prop({ default: 0 })
-  public numeroCalificaciones!: number;
+  @prop({ type: () => [Ingrediente] })
+  public ingredientes?: Ingrediente[];
 
   @prop({ default: Date.now })
   public createdAt!: Date;
