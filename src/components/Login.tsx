@@ -6,7 +6,7 @@ const Login: React.FC = () => {
     <div className="h-screen w-screen e-screen flex items-center justify-center bg-gradient-to-l from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
       
       
-      <div className="flex w-[900px] h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-white">
+      <div className="flex w-[900px] h-[500px] rounded-4xl overflow-hidden shadow-2xl bg-white">
         <div
           className="flex-1"
           style={{
