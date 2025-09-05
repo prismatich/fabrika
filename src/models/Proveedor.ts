@@ -1,9 +1,9 @@
-// src/models/Sucursal.ts
+// src/models/Proveedor.ts
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 
 @modelOptions({
   schemaOptions: {
-    collection: 'sucursales',
+    collection: 'proveedores',
     timestamps: true
   },
   options: {
@@ -11,38 +11,35 @@ import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoos
   }
 })
 @index({ nombre: 1 })
-@index({ codigo: 1 })
-@index({ ciudad: 1 })
-export class Sucursal {
+@index({ email: 1 })
+@index({ telefono: 1 })
+export class Proveedor {
   @prop({ required: true, trim: true })
   public nombre!: string;
 
-  @prop({ required: true, unique: true, trim: true })
-  public codigo!: string;
+  @prop({ required: true, trim: true })
+  public email!: string;
 
   @prop({ required: true, trim: true })
-  public direccion!: string;
+  public telefono!: string;
 
-  @prop({ required: true, trim: true })
-  public ciudad!: string;
+  @prop({ trim: true })
+  public direccion?: string;
 
-  @prop({ required: true, trim: true })
-  public pais!: string;
+  @prop({ trim: true })
+  public ciudad?: string;
+
+  @prop({ trim: true })
+  public pais?: string;
 
   @prop({ trim: true })
   public codigoPostal?: string;
 
-  @prop({ trim: true })
-  public telefono?: string;
-
-  @prop({ trim: true })
-  public email?: string;
-
   @prop({ default: true })
-  public activa!: boolean;
+  public activo!: boolean;
 
   @prop({ type: () => Object })
   public datosAdicionales?: Record<string, any>;
 }
 
-export const SucursalModel = getModelForClass(Sucursal);
+export const ProveedorModel = getModelForClass(Proveedor);

@@ -1,6 +1,13 @@
 // src/models/User.ts
 import { prop, getModelForClass, modelOptions, Severity } from '@typegoose/typegoose';
 
+export enum UserRole {
+  USER = 'user',
+  ADMIN = 'admin',
+  AdminSucursal = 'adminSucursal',
+  SUPERADMIN = 'superadmin'
+}
+
 @modelOptions({
   schemaOptions: {
     collection: 'users',
@@ -20,11 +27,15 @@ export class User {
   @prop({ required: true })
   public password!: string;
 
+  @prop({ 
+    type: String, 
+    enum: UserRole, 
+    default: UserRole.USER 
+  })
+  public role!: UserRole;
+
   @prop()
   public lastLogin?: Date;
-
-  @prop({ default: Date.now })
-  public createdAt!: Date;
 }
 
 export const UserModel = getModelForClass(User);

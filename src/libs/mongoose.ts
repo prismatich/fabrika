@@ -1,10 +1,8 @@
 // src/libs/mongoose.ts
 import mongoose from 'mongoose';
 
-// Configuración de MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/testing';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fabrika';
 
-// Cache de la conexión para reutilizar en Astro
 let cached = (global as any).mongoose;
 
 if (!cached) {
@@ -26,7 +24,13 @@ async function connectToMongoDB() {
     });
   }
 
-  cached.conn = await cached.promise;
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
   return cached.conn;
 }
 
