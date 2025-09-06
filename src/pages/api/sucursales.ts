@@ -72,8 +72,6 @@ export const POST: APIRoute = async ({ request }) => {
             codigo: codigo.trim(),
             direccion: direccion.trim(),
             ciudad: ciudad.trim(),
-            pais: pais.trim(),
-            codigoPostal: codigoPostal?.trim(),
             telefono: telefono?.trim(),
             email: email?.trim()
         });
@@ -89,8 +87,6 @@ export const POST: APIRoute = async ({ request }) => {
                 codigo: sucursalGuardada.codigo,
                 direccion: sucursalGuardada.direccion,
                 ciudad: sucursalGuardada.ciudad,
-                pais: sucursalGuardada.pais,
-                codigoPostal: sucursalGuardada.codigoPostal,
                 telefono: sucursalGuardada.telefono,
                 email: sucursalGuardada.email,
                 activa: sucursalGuardada.activa
@@ -129,8 +125,6 @@ export const GET: APIRoute = async () => {
                 codigo: suc.codigo,
                 direccion: suc.direccion,
                 ciudad: suc.ciudad,
-                pais: suc.pais,
-                codigoPostal: suc.codigoPostal,
                 telefono: suc.telefono,
                 email: suc.email,
                 activa: suc.activa,

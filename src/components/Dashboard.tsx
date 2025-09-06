@@ -2,6 +2,8 @@ import { Calendar, Card, CardBody, CardHeader, Table, TableBody, TableCell, Tabl
 import React from "react";
 import { Bar, BarChart, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import {HeroUIProvider} from "@heroui/react";
+
 const Dashboard: React.FC = () => {
   // Datos de ejemplo (vacíos, luego los reemplazas con tu backend/API)
   const lineData = [
@@ -20,6 +22,7 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
+    
     <div className="grid grid-cols-12 gap-6 p-6">
       {/* Métricas principales */}
       <Card className="col-span-3">
