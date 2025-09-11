@@ -1,6 +1,7 @@
 // src/libs/auth.ts
 import jwt from 'jsonwebtoken';
-import { UserModel, UserRole } from '../models/User';
+import type { APIRoute } from 'astro';
+import { UserModel, UserRole } from '../../models/User';
 
 export interface AuthUser {
   id: string;
@@ -134,3 +135,67 @@ export function requireAdminSucursal() {
 export function requireSuperAdmin() {
   return requireRole([UserRole.SUPERADMIN]);
 }
+
+
+export const withAuth = (handler: APIRoute): APIRoute => {
+    return async (context) => {
+        try {
+            // Verificar autenticación
+            const authResult = await requireAuth(context.request);
+            if (!authResult.user) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    message: authResult.error || 'No autorizado'
+                }), {
+                    status: 401,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            }
+
+            // Agregar el usuario autenticado al contexto
+            (context as any).user = authResult.user;
+            
+            // Ejecutar el handler original
+            return await handler(context);
+        } catch (error) {
+            console.error('Error en middleware de autenticación:', error);
+            return new Response(JSON.stringify({
+                success: false,
+                message: 'Error de autenticación'
+            }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        }
+    };
+};
+
+/**
+ * Middleware de autenticación con verificación de roles
+ * Verifica que el usuario tenga un rol específico
+ */
+export const withRole = (allowedRoles: string[]) => {
+    return (handler: APIRoute): APIRoute => {
+        return withAuth(async (context) => {
+            const user = (context as any).user;
+            
+            if (!allowedRoles.includes(user.role)) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    message: 'No tienes permisos para realizar esta acción'
+                }), {
+                    status: 403,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            }
+
+            return await handler(context);
+        });
+    };
+};

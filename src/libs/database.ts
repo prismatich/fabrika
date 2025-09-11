@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { getModelForClass } from '@typegoose/typegoose';
 
 // Configuración de conexión a MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fabrika';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/testing';
 
 // Opciones de conexión
 const connectionOptions = {

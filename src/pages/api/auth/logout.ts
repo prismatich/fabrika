@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { createLogoutCookie } from '../../../libs/auth';
+import { createLogoutCookie } from '../../../libs/middleware/auth';
 
 export const POST: APIRoute = async ({ request }) => {
     try {

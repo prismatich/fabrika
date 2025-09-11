@@ -1,34 +1,34 @@
-// src/models/Ingrediente.ts
+// src/models/Ingredient.ts
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 
 @modelOptions({
   schemaOptions: {
-    collection: 'ingredientes',
+    collection: 'ingredients',
     timestamps: true
   },
   options: {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ nombre: 1 })
-@index({ categoria: 1 })
-@index({ proveedor: 1 })
+@index({ name: 1 })
+@index({ category: 1 })
+@index({ supplier: 1 })
 @index({ stock: 1 })
-export class Ingrediente {
+export class Ingredient {
   @prop({ required: true, unique: true, trim: true })
-  public nombre!: string;
+  public name!: string;
 
   @prop({ required: true, trim: true })
-  public descripcion!: string;
+  public description!: string;
 
   @prop({ required: true, trim: true })
-  public proveedor!: string;
+  public supplier!: string;
 
   @prop({ required: true, min: 0, default: 0 })
   public stock!: number;
 
   @prop({ required: true, trim: true })
-  public categoria!: string;
+  public category!: string;
 }
 
-export const IngredienteModel = getModelForClass(Ingrediente);
+export const IngredientModel = getModelForClass(Ingredient);

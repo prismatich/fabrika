@@ -1,47 +1,47 @@
-// src/models/Cliente.ts
+// src/models/Customer.ts
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 
 @modelOptions({
   schemaOptions: {
-    collection: 'clientes',
+    collection: 'customers',
     timestamps: true
   },
   options: {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ nombre: 1 })
-@index({ correo: 1 })
-@index({ telefono: 1 })
-@index({ activo: 1 })
+@index({ name: 1 })
+@index({ email: 1 })
+@index({ phone: 1 })
+@index({ active: 1 })
 @index({ createdAt: -1 })
-export class Cliente {
+export class Customer {
   @prop({ required: true, trim: true })
-  public nombre!: string;
+  public name!: string;
 
   @prop({ required: true, trim: true })
-  public telefono!: string;
+  public phone!: string;
 
   @prop({ required: true, unique: true, trim: true, lowercase: true })
-  public correo!: string;
+  public email!: string;
 
   @prop({ trim: true })
-  public direccion?: string;
+  public address?: string;
 
   @prop()
-  public fechaNacimiento?: Date;
+  public birthDate?: Date;
 
-  @prop({ enum: ['masculino', 'femenino', 'otro'] })
-  public genero?: 'masculino' | 'femenino' | 'otro';
+  @prop({ enum: ['male', 'female', 'other'] })
+  public gender?: 'male' | 'female' | 'other';
 
   @prop({ default: true })
-  public activo!: boolean;
+  public active!: boolean;
 
   @prop({ type: () => [String], trim: true })
-  public preferencias?: string[];
+  public preferences?: string[];
 
   @prop({ trim: true })
-  public notas?: string;
+  public notes?: string;
 
   @prop({ default: Date.now })
   public createdAt!: Date;
@@ -50,4 +50,4 @@ export class Cliente {
   public updatedAt!: Date;
 }
 
-export const ClienteModel = getModelForClass(Cliente);
+export const CustomerModel = getModelForClass(Customer);

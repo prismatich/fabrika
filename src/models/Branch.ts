@@ -1,42 +1,42 @@
-// src/models/Sucursal.ts
+// src/models/Branch.ts
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 
 @modelOptions({
   schemaOptions: {
-    collection: 'sucursales',
+    collection: 'branches',
     timestamps: true
   },
   options: {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ nombre: 1 })
-@index({ codigo: 1 })
-@index({ ciudad: 1 })
-export class Sucursal {
+@index({ name: 1 })
+@index({ code: 1 })
+@index({ city: 1 })
+export class Branch {
   @prop({ required: true, trim: true })
-  public nombre!: string;
+  public name!: string;
 
   @prop({ required: true, unique: true, trim: true })
-  public codigo!: string;
+  public code!: string;
 
   @prop({ required: true, trim: true })
-  public direccion!: string;
+  public address!: string;
 
   @prop({ required: true, trim: true })
-  public ciudad!: string;
+  public city!: string;
 
   @prop({ trim: true })
-  public telefono?: string;
+  public phone?: string;
 
   @prop({ trim: true })
   public email?: string;
 
   @prop({ default: true })
-  public activa!: boolean;
+  public active!: boolean;
 
   @prop({ type: () => Object })
-  public datosAdicionales?: Record<string, any>;
+  public additionalData?: Record<string, any>;
 }
 
-export const SucursalModel = getModelForClass(Sucursal);
+export const BranchModel = getModelForClass(Branch);

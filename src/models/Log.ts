@@ -1,4 +1,4 @@
-// src/models/Logs.ts
+// src/models/Log.ts
 import { prop, getModelForClass, modelOptions, Severity, index, type Ref } from '@typegoose/typegoose';
 import { User } from './User';
 
@@ -11,39 +11,39 @@ import { User } from './User';
     allowMixed: Severity.ALLOW
   }
 })
-@index({ nivel: 1 })
-@index({ modulo: 1 })
-@index({ accion: 1 })
-@index({ usuario: 1 })
+@index({ level: 1 })
+@index({ module: 1 })
+@index({ action: 1 })
+@index({ user: 1 })
 @index({ createdAt: -1 })
-@index({ 'entidad.tipo': 1, 'entidad.id': 1 })
+@index({ 'entity.type': 1, 'entity.id': 1 })
 export class Log {
   @prop({ required: true, enum: ['info', 'warning', 'error', 'debug'], default: 'info' })
-  public nivel!: 'info' | 'warning' | 'error' | 'debug';
+  public level!: 'info' | 'warning' | 'error' | 'debug';
 
   @prop({ required: true, trim: true })
-  public mensaje!: string;
+  public message!: string;
 
   @prop({ required: true, trim: true })
-  public modulo!: string;
+  public module!: string;
 
   @prop({ required: true, trim: true })
-  public accion!: string;
+  public action!: string;
 
   @prop({ ref: () => User })
-  public usuario?: Ref<User>;
+  public user?: Ref<User>;
 
   @prop({
-    tipo: { type: String, trim: true },
+    type: { type: String, trim: true },
     id: { type: String }
   })
-  public entidad?: {
-    tipo: string;
+  public entity?: {
+    type: string;
     id: string;
   };
 
   @prop({ type: () => Object })
-  public datosAdicionales?: Record<string, any>;
+  public additionalData?: Record<string, any>;
 
   @prop({ trim: true })
   public ip?: string;

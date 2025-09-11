@@ -1,39 +1,39 @@
-// src/models/Proveedor.ts
+// src/models/Supplier.ts
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 
 @modelOptions({
   schemaOptions: {
-    collection: 'proveedores',
+    collection: 'suppliers',
     timestamps: true
   },
   options: {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ nombre: 1 })
+@index({ name: 1 })
 @index({ email: 1 })
-@index({ telefono: 1 })
-export class Proveedor {
+@index({ phone: 1 })
+export class Supplier {
   @prop({ required: true, trim: true })
-  public nombre!: string;
+  public name!: string;
 
   @prop({ required: true, trim: true })
   public email!: string;
 
   @prop({ required: true, trim: true })
-  public telefono!: string;
+  public phone!: string;
 
   @prop({ trim: true })
-  public direccion?: string;
+  public address?: string;
 
   @prop({ trim: true })
-  public ciudad?: string;
+  public city?: string;
 
   @prop({ default: true })
-  public activo!: boolean;
+  public active!: boolean;
 
   @prop({ type: () => Object })
-  public datosAdicionales?: Record<string, any>;
+  public additionalData?: Record<string, any>;
 }
 
-export const ProveedorModel = getModelForClass(Proveedor);
+export const SupplierModel = getModelForClass(Supplier);

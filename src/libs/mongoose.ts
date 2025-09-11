@@ -1,7 +1,7 @@
 // src/libs/mongoose.ts
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fabrika';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/testing';
 
 let cached = (global as any).mongoose;
 

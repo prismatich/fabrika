@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { UserModel } from '../../../models/User';
-import { generateToken, createSessionCookie } from '../../../libs/auth';
+import { generateToken, createSessionCookie } from '../../../libs/middleware/auth';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
