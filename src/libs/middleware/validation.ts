@@ -231,5 +231,21 @@ export const validationSchemas = {
         code: { required: true, type: 'string' as const, minLength: 1, maxLength: 20 },
         address: { required: true, type: 'string' as const, minLength: 1, maxLength: 200 },
         city: { required: true, type: 'string' as const, minLength: 1, maxLength: 50 }
+    },
+    
+    // Esquema para facturas
+    invoice: {
+        invoiceNumber: { required: true, type: 'string' as const, minLength: 1, maxLength: 50 },
+        supplier: { required: true, type: 'string' as const, minLength: 1 },
+        branch: { required: true, type: 'string' as const, minLength: 1 },
+        invoiceDate: { required: true, type: 'string' as const },
+        dueDate: { required: true, type: 'string' as const },
+        items: { required: true, type: 'array' as const },
+        subtotal: { required: true, type: 'number' as const, min: 0 },
+        taxAmount: { required: false, type: 'number' as const, min: 0 },
+        discountAmount: { required: false, type: 'number' as const, min: 0 },
+        totalAmount: { required: true, type: 'number' as const, min: 0 },
+        notes: { required: false, type: 'string' as const, maxLength: 1000 },
+        paymentMethod: { required: false, type: 'string' as const, maxLength: 50 }
     }
 };

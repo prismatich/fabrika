@@ -54,31 +54,13 @@ export class RawMaterial {
   public unitPrice!: number; // Precio de venta por unidad
 
   @prop({ trim: true })
-  public storageLocation?: string;
-
-  @prop({ trim: true })
   public batchNumber?: string;
-
-  @prop()
-  public expirationDate?: Date;
-
-  @prop({ trim: true })
-  public origin?: string; // País o región de origen
-
-  @prop({ enum: ['excellent', 'good', 'fair', 'poor'], default: 'good' })
-  public quality!: 'excellent' | 'good' | 'fair' | 'poor';
 
   @prop({ default: true })
   public active!: boolean;
 
-  @prop({ type: () => [String], trim: true })
-  public tags?: string[];
-
   @prop({ trim: true })
   public notes?: string;
-
-  @prop({ type: () => Object })
-  public specifications?: Record<string, any>; // Especificaciones técnicas
 
   @prop({ type: () => Object })
   public additionalData?: Record<string, any>;
