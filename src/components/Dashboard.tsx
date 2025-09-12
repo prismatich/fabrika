@@ -1,139 +1,149 @@
-import { Calendar, Card, CardBody, CardHeader, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
+import {
+  Avatar,
+  Button,
+  Calendar,
+  Card,
+  CardBody,
+  CardHeader,
+  HeroUIProvider,
+  Input,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@heroui/react";
+import {
+  BarChart3,
+  ClipboardList,
+  KeyRound,
+  Menu,
+  Package,
+  Repeat,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import React from "react";
-import { Bar, BarChart, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-
-import {HeroUIProvider} from "@heroui/react";
 
 const Dashboard: React.FC = () => {
-  // Datos de ejemplo (vacíos, luego los reemplazas con tu backend/API)
-  const lineData = [
-    { name: "Enero", activos: 0, pasivos: 0 },
-    { name: "Febrero", activos: 0, pasivos: 0 },
-  ];
-
-  const pieData = [
-    { name: "Categoría A", value: 0 },
-    { name: "Categoría B", value: 0 },
-  ];
-
-  const barData = [
-    { name: "Producto 1", value: 0 },
-    { name: "Producto 2", value: 0 },
+  const menuItems = [
+    { icon: BarChart3, label: "Estadísticas" },
+    { icon: Package, label: "Inventario" },
+    { icon: ClipboardList, label: "Pedidos" },
+    { icon: ShoppingCart, label: "Compras" },
+    { icon: Repeat, label: "Movimientos" },
+    { icon: User, label: "Usuarios" },
+    { icon: Menu, label: "Registros" },
+    { icon: KeyRound, label: "Administración" },
   ];
 
   return (
-    
-    <div className="grid grid-cols-12 gap-6 p-6">
-      {/* Métricas principales */}
-      <Card className="col-span-3">
-        <CardHeader>Ingresos</CardHeader>
-        <CardBody>
-          <p className="text-2xl font-bold">$0</p>
-        </CardBody>
-      </Card>
+    <HeroUIProvider>
+      <div className="flex h-screen bg-[#F6F4F4]">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white shadow-md p-4 flex flex-col gap-4">
+          <h1 className="text-2xl font-bold text-primary mb-4">Prismatich</h1>
+          <nav className="flex flex-col gap-2">
+            {menuItems.map(({ icon: Icon, label }) => (
+              <Button
+                key={label}
+                variant="light"
+                className="flex items-center gap-3 justify-start hover:bg-gray-100"
+              >
+                <Icon size={20} />
+                {label}
+              </Button>
+            ))}
+          </nav>
+        </aside>
 
-      <Card className="col-span-3">
-        <CardHeader>Gastos</CardHeader>
-        <CardBody>
-          <p className="text-2xl font-bold">$0</p>
-        </CardBody>
-      </Card>
 
-      <Card className="col-span-3">
-        <CardHeader>Ganancia Neta</CardHeader>
-        <CardBody>
-          <p className="text-2xl font-bold">$0</p>
-        </CardBody>
-      </Card>
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header */}
+          <header className="flex items-center justify-between bg-white shadow px-6 py-4">
+            <h2 className="text-lg font-semibold">Bienvenido a SCI</h2>
+            <div className="flex items-center gap-4">
+              <Input placeholder="Buscar..." size="sm" className="w-48" />
+              <Avatar name="Admin" />
+            </div>
+          </header>
+          <main className="flex-1 overflow-y-auto p-6 bg-[#F6F4F4]">
+            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+              {[
+                { title: "Inventario", text: "Agregar material" },
+                { title: "Proveedores", text: "Registrar proveedor" },
+                { title: "Usuarios", text: "Invitar usuario" },
+                { title: "Clientes", text: "Registrar cliente" },
+              ].map((item, idx) => (
+                <Card
+                  key={idx}
+                  className="shadow hover:shadow-lg transition bg-white"
+                >
+                  <CardHeader className="font-bold">{item.title}</CardHeader>
+                  <CardBody>{item.text}</CardBody>
+                </Card>
+              ))}
+            </section>
 
-      <Card className="col-span-3">
-        <CardHeader>Clientes</CardHeader>
-        <CardBody>
-          <p className="text-2xl font-bold">0</p>
-        </CardBody>
-      </Card>
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <Card className="lg:col-span-2 h-56 shadow bg-white">
+                <CardHeader className="font-bold">Activos vs Pasivos</CardHeader>
+                <CardBody className="flex items-center justify-center text-gray-500">
+                  📈 Aquí iría tu gráfico
+                </CardBody>
+              </Card>
 
-      {/* Gráfico de líneas */}
-      <Card className="col-span-6 h-[300px]">
-        <CardHeader>Activos vs Pasivos</CardHeader>
-        <CardBody>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={lineData}>
-              <Line type="monotone" dataKey="activos" stroke="#0088FE" />
-              <Line type="monotone" dataKey="pasivos" stroke="#FF8042" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardBody>
-      </Card>
+              <Card className="h-56 shadow bg-white">
+                <CardHeader className="font-bold">Calendario</CardHeader>
+                <CardBody className="flex justify-center">
+                  <Calendar aria-label="Calendario" />
+                </CardBody>
+              </Card>
+            </section>
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <Card className="h-56 shadow bg-white">
+                <CardHeader className="font-bold">Producción</CardHeader>
+                <CardBody className="flex items-center justify-center text-gray-500">
+                  Barras o progreso aquí
+                </CardBody>
+              </Card>
 
-      {/* Gráfico de torta */}
-      <Card className="col-span-3 h-[300px]">
-        <CardHeader>Análisis</CardHeader>
-        <CardBody>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie data={pieData} dataKey="value" outerRadius={80} label>
-                {pieData.map((_, index) => (
-                  <Cell
-                    key={index}
-                    fill={["#0088FE", "#00C49F", "#FFBB28", "#FF8042"][index % 4]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </CardBody>
-      </Card>
+              <Card className="h-56 shadow bg-white">
+                <CardHeader className="font-bold">Análisis</CardHeader>
+                <CardBody className="flex items-center justify-center text-gray-500">
+                  KPI o CircularProgress aquí
+                </CardBody>
+              </Card>
+            </section>
 
-      {/* Calendario */}
-      <Card className="col-span-3 h-[300px]">
-        <CardHeader>Calendario</CardHeader>
-        <CardBody>
-          <Calendar aria-label="Calendario" />
-        </CardBody>
-      </Card>
-
-      {/* Gráfico de barras */}
-      <Card className="col-span-6 h-[300px]">
-        <CardHeader>Producción</CardHeader>
-        <CardBody>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={barData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardBody>
-      </Card>
-
-      {/* Tabla */}
-      <Card className="col-span-12">
-        <CardHeader>Últimos Movimientos</CardHeader>
-        <CardBody>
-          <Table aria-label="Últimos movimientos">
-            <TableHeader>
-              <TableColumn>Fecha</TableColumn>
-              <TableColumn>Descripción</TableColumn>
-              <TableColumn>Monto</TableColumn>
-              <TableColumn>Estado</TableColumn>
-            </TableHeader>
-                <TableBody emptyContent={"Sin datos"}>
-            <TableRow>
-                <TableCell colSpan={4} className="text-center">
-            Sin datos
-                </TableCell>
-            </TableRow>
-</TableBody>
-          </Table>
-        </CardBody>
-      </Card>
-    </div>
+            <Card className="shadow bg-white">
+              <CardHeader className="font-bold">Últimos Movimientos</CardHeader>
+              <CardBody>
+                <Table aria-label="Últimos movimientos">
+                  <TableHeader>
+                    <TableColumn>Fecha</TableColumn>
+                    <TableColumn>Descripción</TableColumn>
+                    <TableColumn>Monto</TableColumn>
+                    <TableColumn>Estado</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent={"Sin datos"}>
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className="text-center text-gray-500"
+                      >
+                        Sin datos
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardBody>
+            </Card>
+          </main>
+        </div>
+      </div>
+    </HeroUIProvider>
   );
 };
 

@@ -1,13 +1,16 @@
+import { Button, Checkbox, Input } from "@heroui/react";
 import React from "react";
 
-
 const Login: React.FC = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Formulario enviado ✅");
+  };
+
   return (
-    
-    <div className="h-screen w-screen e-screen flex items-center justify-center bg-gradient-to-l from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
-      
-      
+    <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-l from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
       <div className="flex w-[900px] h-[500px] rounded-4xl overflow-hidden shadow-2xl bg-white">
+        {/* Panel izquierdo: Imagen */}
         <div
           className="flex-1"
           style={{
@@ -17,50 +20,47 @@ const Login: React.FC = () => {
           }}
         ></div>
 
-        <div className="flex-1 flex flex-col justify-center items-center p-5">
-          <h1 className="text-4xl font-bold mb-8">Login</h1>
+        {/* Panel derecho: Formulario */}
+        <div className="flex-1 flex flex-col justify-center items-center p-8">
+          <h1 className="text-4xl font-bold mb-8 text-gray-800">Login</h1>
 
-          <form
-            className="w-full max-w-sm space-y-5"
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              console.log("Formulario enviado ✅");
-            }}
-          >
-            <div>
-              <input
-                type="text"
-                placeholder="Username"
-                aria-placeholder="escribe tu nombre de usuario"
-                className="w-full p-3 rounded-xl border border-gray-300 outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
+            {/* Input Usuario */}
+            <Input
+              type="text"
+              label="Usuario"
+              placeholder="Escribe tu nombre de usuario"
+              className="w-full rounded-xl border border-gray-300 px-3 py-3 focus:ring-2 focus:ring-blue-400"
+              variant="flat"
+              radius="sm"
+            />
 
-            <div>
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full p-3 rounded-xl border border-gray-300 outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
+            {/* Input Contraseña */}
+            <Input
+              type="password"
+              label="Contraseña"
+              placeholder="Escribe tu contraseña"
+              className="w-full rounded-xl border border-gray-300 px-3 py-3 focus:ring-2 focus:ring-blue-400"
+              variant="flat"
+              radius="sm"
+            />
 
+            {/* Checkbox Recordar */}
             <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="remember"
-                className="h-4 w-4 rounded border-gray-300"
-              />
-              <label htmlFor="remember" className="text-gray-600">
-                Remember
-              </label>
+              <Checkbox  radius="sm" color="default" className="text-gray-600">
+                Recordar
+              </Checkbox>
             </div>
 
-            <button
+            {/* Botón Ingresar */}
+            <Button
               type="submit"
               className="w-full p-3 bg-black text-white rounded-xl hover:bg-gray-800 transition"
+              variant="solid"
+              radius="sm"
             >
               Ingresar
-            </button>
+            </Button>
           </form>
         </div>
       </div>
