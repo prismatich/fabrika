@@ -18,14 +18,8 @@ const createRawMaterial: APIRoute = async ({ request }) => {
         maximumStock, 
         unitCost, 
         unitPrice, 
-        storageLocation, 
         batchNumber, 
-        expirationDate, 
-        origin, 
-        quality, 
-        tags, 
-        notes, 
-        specifications 
+        notes 
     } = (request as any).validatedData;
 
     // Verificar si la materia prima ya existe por código
@@ -55,14 +49,8 @@ const createRawMaterial: APIRoute = async ({ request }) => {
         maximumStock: maximumStock,
         unitCost: unitCost,
         unitPrice: unitPrice,
-        storageLocation: storageLocation?.trim(),
         batchNumber: batchNumber?.trim(),
-        expirationDate: expirationDate ? new Date(expirationDate) : undefined,
-        origin: origin?.trim(),
-        quality: quality || 'good',
-        tags: tags,
-        notes: notes?.trim(),
-        specifications: specifications
+        notes: notes?.trim()
     });
 
     const rawMaterialGuardada = await nuevaRawMaterial.save();
@@ -83,14 +71,8 @@ const createRawMaterial: APIRoute = async ({ request }) => {
             maximumStock: rawMaterialGuardada.maximumStock,
             unitCost: rawMaterialGuardada.unitCost,
             unitPrice: rawMaterialGuardada.unitPrice,
-            storageLocation: rawMaterialGuardada.storageLocation,
             batchNumber: rawMaterialGuardada.batchNumber,
-            expirationDate: rawMaterialGuardada.expirationDate,
-            origin: rawMaterialGuardada.origin,
-            quality: rawMaterialGuardada.quality,
-            tags: rawMaterialGuardada.tags,
             notes: rawMaterialGuardada.notes,
-            specifications: rawMaterialGuardada.specifications,
             active: rawMaterialGuardada.active
         }
     }), {
@@ -123,14 +105,8 @@ const getRawMaterials: APIRoute = async () => {
             maximumStock: rawMaterial.maximumStock,
             unitCost: rawMaterial.unitCost,
             unitPrice: rawMaterial.unitPrice,
-            storageLocation: rawMaterial.storageLocation,
             batchNumber: rawMaterial.batchNumber,
-            expirationDate: rawMaterial.expirationDate,
-            origin: rawMaterial.origin,
-            quality: rawMaterial.quality,
-            tags: rawMaterial.tags,
             notes: rawMaterial.notes,
-            specifications: rawMaterial.specifications,
             active: rawMaterial.active,
             createdAt: (rawMaterial as any).createdAt
         }))

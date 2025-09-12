@@ -8,6 +8,7 @@ export { RawMaterial, RawMaterialModel } from './RawMaterial';
 export { Customer, CustomerModel } from './Customer';
 export { Supplier, SupplierModel } from './Supplier';
 export { Branch, BranchModel } from './Branch';
+export { Invoice, InvoiceModel } from './Invoice';
 export { Log, LogModel } from './Log';
 
 // Tipos de exportación para uso en otros archivos
@@ -18,4 +19,5 @@ export type { RawMaterial as IRawMaterial } from './RawMaterial';
 export type { Customer as ICustomer } from './Customer';
 export type { Supplier as ISupplier } from './Supplier';
 export type { Branch as IBranch } from './Branch';
+export type { Invoice as IInvoice } from './Invoice';
 export type { Log as ILog } from './Log';

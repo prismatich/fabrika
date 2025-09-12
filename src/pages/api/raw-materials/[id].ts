@@ -18,14 +18,8 @@ const updateRawMaterial: APIRoute = async ({ request, params }) => {
         maximumStock, 
         unitCost, 
         unitPrice, 
-        storageLocation, 
         batchNumber, 
-        expirationDate, 
-        origin, 
-        quality, 
-        tags, 
-        notes, 
-        specifications 
+        notes 
     } = (request as any).validatedData;
 
     // Buscar la materia prima por ID
@@ -71,14 +65,8 @@ const updateRawMaterial: APIRoute = async ({ request, params }) => {
     rawMaterial.maximumStock = maximumStock;
     rawMaterial.unitCost = unitCost;
     rawMaterial.unitPrice = unitPrice;
-    rawMaterial.storageLocation = storageLocation?.trim();
     rawMaterial.batchNumber = batchNumber?.trim();
-    rawMaterial.expirationDate = expirationDate ? new Date(expirationDate) : undefined;
-    rawMaterial.origin = origin?.trim();
-    rawMaterial.quality = quality || 'good';
-    rawMaterial.tags = tags;
     rawMaterial.notes = notes?.trim();
-    rawMaterial.specifications = specifications;
 
     const rawMaterialActualizada = await rawMaterial.save();
 
@@ -98,14 +86,8 @@ const updateRawMaterial: APIRoute = async ({ request, params }) => {
             maximumStock: rawMaterialActualizada.maximumStock,
             unitCost: rawMaterialActualizada.unitCost,
             unitPrice: rawMaterialActualizada.unitPrice,
-            storageLocation: rawMaterialActualizada.storageLocation,
             batchNumber: rawMaterialActualizada.batchNumber,
-            expirationDate: rawMaterialActualizada.expirationDate,
-            origin: rawMaterialActualizada.origin,
-            quality: rawMaterialActualizada.quality,
-            tags: rawMaterialActualizada.tags,
             notes: rawMaterialActualizada.notes,
-            specifications: rawMaterialActualizada.specifications,
             active: rawMaterialActualizada.active
         }
     }), {
