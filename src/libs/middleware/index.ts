@@ -101,3 +101,10 @@ export {
     withCRUDLogging,
     validationSchemas
 };
+
+// Exportar middlewares de logging en base de datos
+export {
+    withDatabaseLogging,
+    withCRUDDatabaseLogging,
+    withActionDatabaseLogging
+} from './databaseLogging';

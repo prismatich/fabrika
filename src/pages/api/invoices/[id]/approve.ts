@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
-import connectToMongoDB from '../../../libs/mongoose';
-import { InvoiceModel } from '../../../models/Invoice';
-import { withStandardCRUD } from '../../../libs/middleware';
+import connectToMongoDB from '../../../../libs/mongoose';
+import { InvoiceModel } from '../../../../models/Invoice';
+import { withStandardCRUD, withActionDatabaseLogging } from '../../../../libs/middleware';
 
 const approveInvoice: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -116,4 +116,4 @@ const approveInvoice: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const POST = withStandardCRUD('invoice')(approveInvoice);
+export const POST = withActionDatabaseLogging('invoice', 'approve')(withStandardCRUD('invoice')(approveInvoice));

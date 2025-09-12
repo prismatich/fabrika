@@ -3,7 +3,7 @@ import connectToMongoDB from '../../../libs/mongoose';
 import { InvoiceModel } from '../../../models/Invoice';
 import { SupplierModel } from '../../../models/Supplier';
 import { BranchModel } from '../../../models/Branch';
-import { withCRUDValidation, withReadOnly, validationSchemas } from '../../../libs/middleware';
+import { withCRUDValidation, withReadOnly, validationSchemas, withCRUDDatabaseLogging } from '../../../libs/middleware';
 
 const createInvoice: APIRoute = async ({ request }) => {
     await connectToMongoDB();
@@ -161,7 +161,7 @@ const createInvoice: APIRoute = async ({ request }) => {
     });
 };
 
-export const POST = withCRUDValidation('invoice', validationSchemas.invoice)(createInvoice);
+export const POST = withCRUDDatabaseLogging('invoice')(withCRUDValidation('invoice', validationSchemas.invoice)(createInvoice));
 
 const getInvoices: APIRoute = async ({ url }) => {
     await connectToMongoDB();
@@ -234,4 +234,4 @@ const getInvoices: APIRoute = async ({ url }) => {
     });
 };
 
-export const GET = withReadOnly('invoice')(getInvoices);
+export const GET = withCRUDDatabaseLogging('invoice')(withReadOnly('invoice')(getInvoices));

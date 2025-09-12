@@ -3,7 +3,7 @@ import connectToMongoDB from '../../../libs/mongoose';
 import { InvoiceModel } from '../../../models/Invoice';
 import { SupplierModel } from '../../../models/Supplier';
 import { BranchModel } from '../../../models/Branch';
-import { withCRUDValidation, withStandardCRUD, validationSchemas } from '../../../libs/middleware';
+import { withCRUDValidation, withStandardCRUD, validationSchemas, withCRUDDatabaseLogging } from '../../../libs/middleware';
 
 const getInvoice: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -61,7 +61,7 @@ const getInvoice: APIRoute = async ({ params }) => {
     });
 };
 
-export const GET = withStandardCRUD('invoice')(getInvoice);
+export const GET = withCRUDDatabaseLogging('invoice')(withStandardCRUD('invoice')(getInvoice));
 
 const updateInvoice: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -246,7 +246,7 @@ const updateInvoice: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDValidation('invoice', validationSchemas.invoice)(updateInvoice);
+export const PUT = withCRUDDatabaseLogging('invoice')(withCRUDValidation('invoice', validationSchemas.invoice)(updateInvoice));
 
 const deleteInvoice: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -292,4 +292,4 @@ const deleteInvoice: APIRoute = async ({ params }) => {
     });
 };
 
-export const DELETE = withStandardCRUD('invoice')(deleteInvoice);
+export const DELETE = withCRUDDatabaseLogging('invoice')(withStandardCRUD('invoice')(deleteInvoice));
