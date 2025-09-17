@@ -25,6 +25,7 @@ const Login: React.FC = () => {
       loginStore(data.user, data.user.token || data.token);
 
       // Redirige al dashboard o admin
+      window.location.href = "/admin";
     } catch (err: any) {
       alert(err.message || "Fallo al iniciar sesión");
       console.error(err);
