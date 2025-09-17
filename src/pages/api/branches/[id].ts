@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { BranchModel } from '../../../models/Branch';
 import { withCRUDValidation, withStandardCRUD, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const updateBranch: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -70,7 +71,7 @@ const updateBranch: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDValidation('branch', validationSchemas.branch)(updateBranch);
+export const PUT = withRole(['admin', 'superadmin'])(withCRUDValidation('branch', validationSchemas.branch)(updateBranch));
 
 const deleteBranch: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -103,4 +104,4 @@ const deleteBranch: APIRoute = async ({ params }) => {
     });
 };
 
-export const DELETE = withStandardCRUD('branch')(deleteBranch);
+export const DELETE = withRole(['superadmin'])(withStandardCRUD('branch')(deleteBranch));

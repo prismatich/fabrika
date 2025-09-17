@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { RawMaterialModel } from '../../../models/RawMaterial';
 import { withCRUDValidation, withReadOnly, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const createRawMaterial: APIRoute = async ({ request }) => {
     await connectToMongoDB();
@@ -83,7 +84,7 @@ const createRawMaterial: APIRoute = async ({ request }) => {
     });
 };
 
-export const POST = withCRUDValidation('raw-material', validationSchemas.rawMaterial)(createRawMaterial);
+export const POST = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDValidation('raw-material', validationSchemas.rawMaterial)(createRawMaterial));
 
 const getRawMaterials: APIRoute = async () => {
     await connectToMongoDB();
@@ -118,4 +119,4 @@ const getRawMaterials: APIRoute = async () => {
     });
 };
 
-export const GET = withReadOnly('raw-material')(getRawMaterials);
+export const GET = withRole(['user', 'admin', 'adminSucursal', 'superadmin'])(withReadOnly('raw-material')(getRawMaterials));

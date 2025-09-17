@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { SupplierModel } from '../../../models/Supplier';
 import { withCRUDValidation, withReadOnly, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const createSupplier: APIRoute = async ({ request }) => {
     await connectToMongoDB();
@@ -53,7 +54,7 @@ const createSupplier: APIRoute = async ({ request }) => {
     });
 };
 
-export const POST = withCRUDValidation('supplier', validationSchemas.supplier)(createSupplier);
+export const POST = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDValidation('supplier', validationSchemas.supplier)(createSupplier));
 
 const getSuppliers: APIRoute = async () => {
     await connectToMongoDB();
@@ -80,4 +81,4 @@ const getSuppliers: APIRoute = async () => {
     });
 };
 
-export const GET = withReadOnly('supplier')(getSuppliers);
+export const GET = withRole(['user', 'admin', 'adminSucursal', 'superadmin'])(withReadOnly('supplier')(getSuppliers));

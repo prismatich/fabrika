@@ -4,6 +4,7 @@ import { InvoiceModel } from '../../../models/Invoice';
 import { SupplierModel } from '../../../models/Supplier';
 import { BranchModel } from '../../../models/Branch';
 import { withCRUDValidation, withReadOnly, validationSchemas, withCRUDDatabaseLogging } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const createInvoice: APIRoute = async ({ request }) => {
     await connectToMongoDB();
@@ -161,7 +162,7 @@ const createInvoice: APIRoute = async ({ request }) => {
     });
 };
 
-export const POST = withCRUDDatabaseLogging('invoice')(withCRUDValidation('invoice', validationSchemas.invoice)(createInvoice));
+export const POST = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDDatabaseLogging('invoice')(withCRUDValidation('invoice', validationSchemas.invoice)(createInvoice)));
 
 const getInvoices: APIRoute = async ({ url }) => {
     await connectToMongoDB();
@@ -234,4 +235,4 @@ const getInvoices: APIRoute = async ({ url }) => {
     });
 };
 
-export const GET = withCRUDDatabaseLogging('invoice')(withReadOnly('invoice')(getInvoices));
+export const GET = withRole(['user', 'admin', 'adminSucursal', 'superadmin'])(withCRUDDatabaseLogging('invoice')(withReadOnly('invoice')(getInvoices)));

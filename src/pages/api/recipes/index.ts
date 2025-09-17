@@ -3,6 +3,7 @@ import connectToMongoDB from '../../../libs/mongoose';
 import { RecipeModel } from '../../../models/Recipe';
 import { RawMaterialModel } from '../../../models/RawMaterial';
 import { withCRUDValidation, withReadOnly, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const createRecipe: APIRoute = async ({ request }) => {
     await connectToMongoDB();
@@ -100,7 +101,7 @@ const createRecipe: APIRoute = async ({ request }) => {
     });
 };
 
-export const POST = withCRUDValidation('recipe', validationSchemas.recipe)(createRecipe);
+export const POST = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDValidation('recipe', validationSchemas.recipe)(createRecipe));
 
 const getRecipes: APIRoute = async () => {
     await connectToMongoDB();
@@ -154,4 +155,4 @@ const getRecipes: APIRoute = async () => {
     });
 };
 
-export const GET = withReadOnly('recipe')(getRecipes);
+export const GET = withRole(['user', 'admin', 'adminSucursal', 'superadmin'])(withReadOnly('recipe')(getRecipes));

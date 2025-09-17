@@ -2,6 +2,7 @@
 // Exportar todos los modelos Typegoose
 
 export { User, UserModel } from './User';
+export { Company, CompanyModel } from './Company';
 export { Ingredient, IngredientModel } from './Ingredient';
 export { Recipe, RecipeModel } from './Recipe';
 export { RawMaterial, RawMaterialModel } from './RawMaterial';
@@ -13,6 +14,7 @@ export { Log, LogModel } from './Log';
 
 // Tipos de exportación para uso en otros archivos
 export type { User as IUser } from './User';
+export type { Company as ICompany } from './Company';
 export type { Ingredient as IIngredient } from './Ingredient';
 export type { Recipe as IRecipe } from './Recipe';
 export type { RawMaterial as IRawMaterial } from './RawMaterial';

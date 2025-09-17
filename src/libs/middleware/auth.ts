@@ -8,6 +8,7 @@ export interface AuthUser {
   name: string;
   email: string;
   role: UserRole;
+  companyId: string;
 }
 
 // Configuración JWT
@@ -24,7 +25,8 @@ export function generateToken(user: AuthUser): string {
     { 
       id: user.id,
       email: user.email,
-      role: user.role 
+      role: user.role,
+      companyId: user.companyId
     },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRES_IN }
@@ -39,7 +41,8 @@ export function verifyToken(token: string): AuthUser | null {
       id: decoded.id,
       name: decoded.name,
       email: decoded.email,
-      role: decoded.role
+      role: decoded.role,
+      companyId: decoded.companyId
     };
   } catch (error) {
     console.error('Error verificando token:', error);
@@ -89,10 +92,13 @@ export async function requireAuth(request: Request): Promise<{ user: AuthUser | 
     }
 
     // Verificar que el usuario aún existe en la base de datos
-    const dbUser = await UserModel.findById(user.id);
+    const dbUser = await UserModel.findById(user.id).populate('company');
     if (!dbUser) {
       return { user: null, error: 'Usuario no encontrado' };
     }
+
+    // Actualizar el companyId del usuario autenticado
+    user.companyId = dbUser.company.toString();
 
     return { user };
   } catch (error) {

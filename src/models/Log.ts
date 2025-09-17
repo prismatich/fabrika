@@ -1,6 +1,7 @@
 // src/models/Log.ts
 import { prop, getModelForClass, modelOptions, Severity, index, type Ref } from '@typegoose/typegoose';
 import { User } from './User';
+import { Company } from './Company';
 
 @modelOptions({
   schemaOptions: {
@@ -11,6 +12,7 @@ import { User } from './User';
     allowMixed: Severity.ALLOW
   }
 })
+@index({ company: 1 })
 @index({ level: 1 })
 @index({ module: 1 })
 @index({ action: 1 })
@@ -18,6 +20,9 @@ import { User } from './User';
 @index({ createdAt: -1 })
 @index({ 'entity.type': 1, 'entity.id': 1 })
 export class Log {
+  @prop({ ref: () => Company, required: true })
+  public company!: Ref<Company>;
+
   @prop({ required: true, enum: ['info', 'warning', 'error', 'debug'], default: 'info' })
   public level!: 'info' | 'warning' | 'error' | 'debug';
 

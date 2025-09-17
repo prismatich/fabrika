@@ -1,5 +1,7 @@
 // src/models/Customer.ts
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
+import type { Ref } from '@typegoose/typegoose';
+import { Company } from './Company';
 
 @modelOptions({
   schemaOptions: {
@@ -10,19 +12,23 @@ import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoos
     allowMixed: Severity.ALLOW
   }
 })
-@index({ name: 1 })
-@index({ email: 1 })
+@index({ company: 1 })
+@index({ name: 1, company: 1 })
+@index({ email: 1, company: 1 }, { unique: true })
 @index({ phone: 1 })
 @index({ active: 1 })
 @index({ createdAt: -1 })
 export class Customer {
+  @prop({ ref: () => Company, required: true })
+  public company!: Ref<Company>;
+
   @prop({ required: true, trim: true })
   public name!: string;
 
   @prop({ required: true, trim: true })
   public phone!: string;
 
-  @prop({ required: true, unique: true, trim: true, lowercase: true })
+  @prop({ required: true, trim: true, lowercase: true })
   public email!: string;
 
   @prop({ trim: true })

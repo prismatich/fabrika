@@ -3,6 +3,7 @@ import connectToMongoDB from '../../../libs/mongoose';
 import { RecipeModel } from '../../../models/Recipe';
 import { RawMaterialModel } from '../../../models/RawMaterial';
 import { withCRUDValidation, withStandardCRUD, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const updateRecipe: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -106,7 +107,7 @@ const updateRecipe: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDValidation('recipe', validationSchemas.recipe)(updateRecipe);
+export const PUT = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDValidation('recipe', validationSchemas.recipe)(updateRecipe));
 
 const deleteRecipe: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -139,4 +140,4 @@ const deleteRecipe: APIRoute = async ({ params }) => {
     });
 };
 
-export const DELETE = withStandardCRUD('recipe')(deleteRecipe);
+export const DELETE = withRole(['admin', 'superadmin'])(withStandardCRUD('recipe')(deleteRecipe));

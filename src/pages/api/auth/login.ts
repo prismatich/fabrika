@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
             });
         }
 
-        const user = await UserModel.findOne({ email: email.toLowerCase() });
+        const user = await UserModel.findOne({ email: email.toLowerCase() }).populate('company');
 
         if (!user) {
             return new Response(JSON.stringify({
@@ -81,7 +81,8 @@ export const POST: APIRoute = async ({ request }) => {
             id: user._id.toString(),
             name: user.name,
             email: user.email,
-            role: user.role
+            role: user.role,
+            companyId: user.company.toString()
         };
         
         const token = generateToken(authUser);

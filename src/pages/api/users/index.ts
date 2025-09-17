@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { UserModel, UserRole } from '../../../models/User';
 import { withCRUDValidation, withReadOnly, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 import bcrypt from 'bcryptjs';
 import { requireAuth } from '../../../libs/middleware/auth';
 
@@ -90,7 +91,7 @@ const createUser: APIRoute = async ({ request }) => {
     });
 };
 
-export const POST = withCRUDValidation('user', validationSchemas.user)(createUser);
+export const POST = withRole(['admin', 'superadmin'])(withCRUDValidation('user', validationSchemas.user)(createUser));
 
 const getUsers: APIRoute = async () => {
     await connectToMongoDB();
@@ -115,4 +116,4 @@ const getUsers: APIRoute = async () => {
     });
 };
 
-export const GET = withReadOnly('user')(getUsers);
+export const GET = withRole(['admin', 'superadmin'])(withReadOnly('user')(getUsers));
