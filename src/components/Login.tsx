@@ -1,16 +1,39 @@
 import { Button, Checkbox, Input } from "@heroui/react";
-import React from "react";
+import React, { useState } from "react";
+import { useAuthStore } from "../store/useAuthStore"; // Ajusta la ruta si es diferente
 
 const Login: React.FC = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const loginStore = useAuthStore((state) => state.login);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Formulario enviado ✅");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Error de autenticación");
+      }
+
+      // Guarda el usuario y token en Zustand
+      loginStore(data.user, data.user.token || data.token);
+
+      // Redirige al dashboard o admin
+    } catch (err: any) {
+      alert(err.message || "Fallo al iniciar sesión");
+      console.error(err);
+    }
   };
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-l from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
       <div className="flex w-[900px] h-[500px] rounded-4xl overflow-hidden shadow-2xl bg-white">
-        {/* Panel izquierdo: Imagen */}
         <div
           className="flex-1"
           style={{
@@ -20,44 +43,38 @@ const Login: React.FC = () => {
           }}
         ></div>
 
-        {/* Panel derecho: Formulario */}
         <div className="flex-1 flex flex-col justify-center items-center p-8">
           <h1 className="text-4xl font-bold mb-8 text-gray-800">Login</h1>
 
           <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
-            {/* Input Usuario */}
             <Input
               type="text"
-              label="Usuario"
-              placeholder="Escribe tu nombre de usuario"
-              className="w-full rounded-xl border border-gray-300 px-3 py-3 focus:ring-2 focus:ring-blue-400"
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Escribe tu email"
+              className="w-full"
               variant="flat"
               radius="sm"
             />
-
-            {/* Input Contraseña */}
             <Input
               type="password"
               label="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Escribe tu contraseña"
-              className="w-full rounded-xl border border-gray-300 px-3 py-3 focus:ring-2 focus:ring-blue-400"
+              className="w-full"
               variant="flat"
               radius="sm"
             />
-
-            {/* Checkbox Recordar */}
             <div className="flex items-center space-x-2">
-              <Checkbox  radius="sm" color="default" className="text-gray-600">
+              <Checkbox radius="sm" color="default">
                 Recordar
               </Checkbox>
             </div>
-
-            {/* Botón Ingresar */}
             <Button
               type="submit"
               className="w-full p-3 bg-black text-white rounded-xl hover:bg-gray-800 transition"
-              variant="solid"
-              radius="sm"
             >
               Ingresar
             </Button>
@@ -69,3 +86,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
