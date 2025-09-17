@@ -12,13 +12,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        grayDark: "#404040",   // Dark gray
-        grayMedium: "#8C8C8C", // Medium gray
-        grayLight1: "#F6F4F4", // Light gray
-        grayLight2: "#D9D9D9", // Another gray
-        grayLight3: "#D4D4D8", // Neutral gray
-        white: "#FFFFFF",
-        dangerRed: "#B63939",  // Custom red
+        primary: '#404040',
+        secondary: '#8C8C8C',
+        border: '#D9D9D9',
+        background: '#F6F4F4',
       },
     },
   },
