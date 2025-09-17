@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { IngredientModel } from '../../../models/Ingredient';
 import { withCRUDValidation, withStandardCRUD, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const updateIngredient: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -67,7 +68,7 @@ const updateIngredient: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDValidation('ingredient', validationSchemas.ingredient)(updateIngredient);
+export const PUT = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDValidation('ingredient', validationSchemas.ingredient)(updateIngredient));
 
 const deleteIngredient: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -100,4 +101,4 @@ const deleteIngredient: APIRoute = async ({ params }) => {
     });
 };
 
-export const DELETE = withStandardCRUD('ingredient')(deleteIngredient);
+export const DELETE = withRole(['admin', 'superadmin'])(withStandardCRUD('ingredient')(deleteIngredient));

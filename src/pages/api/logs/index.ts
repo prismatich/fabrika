@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { LogModel } from '../../../models/Log';
 import { withReadOnly } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
+import { Types } from 'mongoose';
 
 const getLogs: APIRoute = async ({ url }) => {
     await connectToMongoDB();
@@ -11,6 +13,7 @@ const getLogs: APIRoute = async ({ url }) => {
     const module = searchParams.get('module');
     const action = searchParams.get('action');
     const userId = searchParams.get('userId');
+    const companyId = searchParams.get('companyId');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '50');
     const skip = (page - 1) * limit;
@@ -21,6 +24,9 @@ const getLogs: APIRoute = async ({ url }) => {
     if (module) filters.module = module;
     if (action) filters.action = action;
     if (userId) filters.user = userId;
+    if (companyId && Types.ObjectId.isValid(companyId)) {
+        filters.company = companyId;
+    }
 
     // Obtener logs con paginación
     const logs = await LogModel.find(filters)
@@ -61,4 +67,4 @@ const getLogs: APIRoute = async ({ url }) => {
     });
 };
 
-export const GET = withReadOnly('logs')(getLogs);
+export const GET = withRole(['admin', 'superadmin'])(withReadOnly('logs')(getLogs));

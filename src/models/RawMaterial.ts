@@ -2,6 +2,7 @@
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 import type { Ref } from '@typegoose/typegoose';
 import { Supplier } from './Supplier';
+import { Company } from './Company';
 
 @modelOptions({
   schemaOptions: {
@@ -12,18 +13,22 @@ import { Supplier } from './Supplier';
     allowMixed: Severity.ALLOW
   }
 })
-@index({ name: 1 })
-@index({ code: 1 })
+@index({ company: 1 })
+@index({ name: 1, company: 1 }, { unique: true })
+@index({ code: 1, company: 1 }, { unique: true })
 @index({ category: 1 })
 @index({ supplier: 1 })
 @index({ unit: 1 })
 @index({ active: 1 })
 @index({ createdAt: -1 })
 export class RawMaterial {
-  @prop({ required: true, unique: true, trim: true })
+  @prop({ ref: () => Company, required: true })
+  public company!: Ref<Company>;
+
+  @prop({ required: true, trim: true })
   public name!: string;
 
-  @prop({ required: true, unique: true, trim: true })
+  @prop({ required: true, trim: true })
   public code!: string;
 
   @prop({ required: true, trim: true })

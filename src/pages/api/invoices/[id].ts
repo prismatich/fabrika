@@ -4,6 +4,7 @@ import { InvoiceModel } from '../../../models/Invoice';
 import { SupplierModel } from '../../../models/Supplier';
 import { BranchModel } from '../../../models/Branch';
 import { withCRUDValidation, withStandardCRUD, validationSchemas, withCRUDDatabaseLogging } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const getInvoice: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -61,7 +62,7 @@ const getInvoice: APIRoute = async ({ params }) => {
     });
 };
 
-export const GET = withCRUDDatabaseLogging('invoice')(withStandardCRUD('invoice')(getInvoice));
+export const GET = withRole(['user', 'admin', 'adminSucursal', 'superadmin'])(withCRUDDatabaseLogging('invoice')(withStandardCRUD('invoice')(getInvoice)));
 
 const updateInvoice: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -246,7 +247,7 @@ const updateInvoice: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDDatabaseLogging('invoice')(withCRUDValidation('invoice', validationSchemas.invoice)(updateInvoice));
+export const PUT = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDDatabaseLogging('invoice')(withCRUDValidation('invoice', validationSchemas.invoice)(updateInvoice)));
 
 const deleteInvoice: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -292,4 +293,4 @@ const deleteInvoice: APIRoute = async ({ params }) => {
     });
 };
 
-export const DELETE = withCRUDDatabaseLogging('invoice')(withStandardCRUD('invoice')(deleteInvoice));
+export const DELETE = withRole(['admin', 'superadmin'])(withCRUDDatabaseLogging('invoice')(withStandardCRUD('invoice')(deleteInvoice)));

@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { RawMaterialModel } from '../../../models/RawMaterial';
 import { withCRUDValidation, withStandardCRUD, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const updateRawMaterial: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -98,7 +99,7 @@ const updateRawMaterial: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDValidation('raw-material', validationSchemas.rawMaterial)(updateRawMaterial);
+export const PUT = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDValidation('raw-material', validationSchemas.rawMaterial)(updateRawMaterial));
 
 const deleteRawMaterial: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -131,4 +132,4 @@ const deleteRawMaterial: APIRoute = async ({ params }) => {
     });
 };
 
-export const DELETE = withStandardCRUD('raw-material')(deleteRawMaterial);
+export const DELETE = withRole(['admin', 'superadmin'])(withStandardCRUD('raw-material')(deleteRawMaterial));

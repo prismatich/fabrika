@@ -1,5 +1,7 @@
 // src/models/Branch.ts
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
+import type { Ref } from '@typegoose/typegoose';
+import { Company } from './Company';
 
 @modelOptions({
   schemaOptions: {
@@ -10,14 +12,18 @@ import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoos
     allowMixed: Severity.ALLOW
   }
 })
-@index({ name: 1 })
-@index({ code: 1 })
+@index({ company: 1 })
+@index({ name: 1, company: 1 })
+@index({ code: 1, company: 1 }, { unique: true })
 @index({ city: 1 })
 export class Branch {
+  @prop({ ref: () => Company, required: true })
+  public company!: Ref<Company>;
+
   @prop({ required: true, trim: true })
   public name!: string;
 
-  @prop({ required: true, unique: true, trim: true })
+  @prop({ required: true, trim: true })
   public code!: string;
 
   @prop({ required: true, trim: true })

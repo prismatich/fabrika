@@ -3,6 +3,7 @@ import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoos
 import type { Ref } from '@typegoose/typegoose';
 import { User } from './User';
 import { Ingredient } from './Ingredient';
+import { Company } from './Company';
 
   // Interfaz para ingredientes de receta con materias primas
 export interface RecipeIngredient {
@@ -20,12 +21,16 @@ export interface RecipeIngredient {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ name: 1 })
+@index({ company: 1 })
+@index({ name: 1, company: 1 }, { unique: true })
 @index({ category: 1 })
 @index({ difficulty: 1 })
 @index({ preparationTime: 1 })
 export class Recipe {
-  @prop({ required: true, unique: true, trim: true })
+  @prop({ ref: () => Company, required: true })
+  public company!: Ref<Company>;
+
+  @prop({ required: true, trim: true })
   public name!: string;
 
   @prop({ required: true, trim: true })

@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { CustomerModel } from '../../../models/Customer';
 import { withCRUDValidation, withStandardCRUD, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const updateCustomer: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -74,7 +75,7 @@ const updateCustomer: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDValidation('customer', validationSchemas.customer)(updateCustomer);
+export const PUT = withRole(['admin', 'adminSucursal', 'superadmin'])(withCRUDValidation('customer', validationSchemas.customer)(updateCustomer));
 
 const deleteCustomer: APIRoute = async ({ params }) => {
     await connectToMongoDB();
@@ -107,4 +108,4 @@ const deleteCustomer: APIRoute = async ({ params }) => {
     });
 };
 
-export const DELETE = withStandardCRUD('customer')(deleteCustomer);
+export const DELETE = withRole(['admin', 'superadmin'])(withStandardCRUD('customer')(deleteCustomer));

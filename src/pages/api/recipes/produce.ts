@@ -3,26 +3,12 @@ import connectToMongoDB from '../../../libs/mongoose';
 import { RecipeModel } from '../../../models/Recipe';
 import { IngredientModel } from '../../../models/Ingredient';
 import { RawMaterialModel } from '../../../models/RawMaterial';
-import { requireAuth } from '../../../libs/middleware/auth';
+import { withRole } from '../../../libs/middleware/auth';
 
-export const POST: APIRoute = async ({ params, request }) => {
+const produceRecipeHandler: APIRoute = async ({ params, request }) => {
     try {
         await connectToMongoDB();
         
-        // Verificar autenticación
-        const authResult = await requireAuth(request);
-        if (!authResult.user) {
-            return new Response(JSON.stringify({
-                success: false,
-                message: authResult.error || 'No autorizado'
-            }), {
-                status: 401,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        }
-
         const { id } = params;
         const { quantity } = await request.json();
 
@@ -164,3 +150,6 @@ export const POST: APIRoute = async ({ params, request }) => {
         });
     }
 };
+
+// Aplicar middleware de roles - solo usuarios autenticados pueden producir recetas
+export const POST = withRole(['user', 'admin', 'adminSucursal', 'superadmin'])(produceRecipeHandler);

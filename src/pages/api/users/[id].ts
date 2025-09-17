@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { UserModel, UserRole } from '../../../models/User';
 import { withCRUDValidation, withStandardCRUD, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 import bcrypt from 'bcryptjs';
 
 // Función para verificar permisos de roles
@@ -100,7 +101,7 @@ const updateUser: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const PUT = withCRUDValidation('user', validationSchemas.user)(updateUser);
+export const PUT = withRole(['admin', 'superadmin'])(withCRUDValidation('user', validationSchemas.user)(updateUser));
 
 const deleteUser: APIRoute = async ({ request, params }) => {
     await connectToMongoDB();
@@ -161,4 +162,4 @@ const deleteUser: APIRoute = async ({ request, params }) => {
     });
 };
 
-export const DELETE = withStandardCRUD('user')(deleteUser);
+export const DELETE = withRole(['superadmin'])(withStandardCRUD('user')(deleteUser));

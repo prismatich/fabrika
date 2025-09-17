@@ -4,6 +4,7 @@ import type { Ref } from '@typegoose/typegoose';
 import { Supplier } from './Supplier';
 import { Branch } from './Branch';
 import { User } from './User';
+import { Company } from './Company';
 
 // Interfaz para los items de la factura
 export interface InvoiceItem {
@@ -24,14 +25,18 @@ export interface InvoiceItem {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ invoiceNumber: 1 })
+@index({ company: 1 })
+@index({ invoiceNumber: 1, company: 1 }, { unique: true })
 @index({ supplier: 1 })
 @index({ branch: 1 })
 @index({ status: 1 })
 @index({ invoiceDate: -1 })
 @index({ createdAt: -1 })
 export class Invoice {
-  @prop({ required: true, unique: true, trim: true })
+  @prop({ ref: () => Company, required: true })
+  public company!: Ref<Company>;
+
+  @prop({ required: true, trim: true })
   public invoiceNumber!: string; // Número de factura único
 
   @prop({ ref: () => Supplier, required: true })

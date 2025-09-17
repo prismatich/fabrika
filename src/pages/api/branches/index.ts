@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import connectToMongoDB from '../../../libs/mongoose';
 import { BranchModel } from '../../../models/Branch';
 import { withCRUDValidation, withReadOnly, validationSchemas } from '../../../libs/middleware';
+import { withRole } from '../../../libs/middleware/auth';
 
 const createBranch: APIRoute = async ({ request }) => {
     await connectToMongoDB();
@@ -55,7 +56,7 @@ const createBranch: APIRoute = async ({ request }) => {
     });
 };
 
-export const POST = withCRUDValidation('branch', validationSchemas.branch)(createBranch);
+export const POST = withRole(['admin', 'superadmin'])(withCRUDValidation('branch', validationSchemas.branch)(createBranch));
 
 const getBranches: APIRoute = async () => {
     await connectToMongoDB();
@@ -83,4 +84,4 @@ const getBranches: APIRoute = async () => {
     });
 };
 
-export const GET = withReadOnly('branch')(getBranches);
+export const GET = withRole(['user', 'admin', 'adminSucursal', 'superadmin'])(withReadOnly('branch')(getBranches));
