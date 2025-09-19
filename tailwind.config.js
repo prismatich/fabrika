@@ -15,7 +15,7 @@ export default {
         primary: '#404040',
         secondary: '#8C8C8C',
         border: '#D9D9D9',
-        background: '#F6F4F4',
+        background: '#f6f4f5',
       },
     },
   },
