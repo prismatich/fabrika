@@ -33,7 +33,6 @@ const Login: React.FC = () => {
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-l from-[#0D1215] via-[#3C2865] via-[#653792] via-[#475AA5] to-[#2497B4]">
       <div className="flex w-[900px] h-[500px] rounded-4xl overflow-hidden shadow-2xl bg-white">
-        {/* Panel izquierdo: Imagen */}
         <div
           className="flex-1"
           style={{
@@ -43,7 +42,6 @@ const Login: React.FC = () => {
           }}
         ></div>
 
-        {/* Panel derecho: Formulario */}
         <div className="flex-1 flex flex-col justify-center items-center p-8">
           <h1 className="text-4xl font-bold mb-8 text-gray-800">Login</h1>
 
@@ -67,21 +65,17 @@ const Login: React.FC = () => {
               radius="sm"
               isRequired
             />
-
-            {/* Input Contraseña */}
             <Input
               type="password"
               label="Contraseña"
-              placeholder="Escribe tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="Escribe tu contraseña"
               className="w-full rounded-xl border border-gray-300 px-3 py-3 focus:ring-2 focus:ring-blue-400"
               variant="flat"
               radius="sm"
               isRequired
             />
-
-            {/* Checkbox Recordar */}
             <div className="flex items-center space-x-2">
               <Checkbox 
                 radius="sm" 
@@ -93,8 +87,6 @@ const Login: React.FC = () => {
                 Recordar
               </Checkbox>
             </div>
-
-            {/* Botón Ingresar */}
             <Button
               type="submit"
               className="w-full p-3 bg-black text-white rounded-xl hover:bg-gray-800 transition disabled:opacity-50"
@@ -113,3 +105,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
