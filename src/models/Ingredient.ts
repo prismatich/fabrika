@@ -18,22 +18,22 @@ import { Company } from './Company';
 @index({ supplier: 1 })
 @index({ stock: 1 })
 export class Ingredient {
-  @prop({ ref: () => Company, required: true, type: () => String })
+  @prop({ ref: () => Company, required: true })
   public company!: Ref<Company>;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public name!: string;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public description!: string;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public supplier!: string;
 
-  @prop({ required: true, min: 0, default: 0, type: Number })
+  @prop({ required: true, min: 0, default: 0 })
   public stock!: number;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public category!: string;
 }
 

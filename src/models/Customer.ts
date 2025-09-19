@@ -19,35 +19,41 @@ import { Company } from './Company';
 @index({ active: 1 })
 @index({ createdAt: -1 })
 export class Customer {
-  @prop({ ref: () => Company, required: true, type: () => String })
+  @prop({ ref: () => Company, required: true })
   public company!: Ref<Company>;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public name!: string;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public phone!: string;
 
-  @prop({ required: true, trim: true, lowercase: true, type: String })
+  @prop({ required: true, trim: true, lowercase: true })
   public email!: string;
 
-  @prop({ trim: true, type: String })
+  @prop({ trim: true })
   public address?: string;
 
-  @prop({ type: Date })
+  @prop()
   public birthDate?: Date;
 
-  @prop({ type: String, enum: ['M', 'F', 'O'] })
-  public gender?: 'M' | 'F' | 'O';
+  @prop({ enum: ['male', 'female', 'other'] })
+  public gender?: 'male' | 'female' | 'other';
 
-  @prop({ default: true, type: Boolean })
+  @prop({ default: true })
   public active!: boolean;
 
-  @prop({ trim: true, type: String })
-  public preferences?: string;
+  @prop({ type: () => [String], trim: true })
+  public preferences?: string[];
 
-  @prop({ trim: true, type: String })
+  @prop({ trim: true })
   public notes?: string;
+
+  @prop({ default: Date.now })
+  public createdAt!: Date;
+
+  @prop({ default: Date.now })
+  public updatedAt!: Date;
 }
 
 export const CustomerModel = getModelForClass(Customer);

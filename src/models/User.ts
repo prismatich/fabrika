@@ -6,7 +6,7 @@ import { Company } from './Company';
 export enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
-  ADMIN_SUCURSAL = 'adminSucursal',
+  AdminSucursal = 'adminSucursal',
   SUPERADMIN = 'superadmin'
 }
 
@@ -33,7 +33,7 @@ export class User {
   public password!: string;
 
   @prop({ 
-    type: String,
+    type: String, 
     enum: Object.values(UserRole), 
     default: UserRole.USER 
   })
@@ -41,9 +41,6 @@ export class User {
 
   @prop({ type: Date })
   public lastLogin?: Date;
-
-  @prop({ default: true, type: Boolean })
-  public active!: boolean;
 }
 
 export const UserModel = getModelForClass(User);

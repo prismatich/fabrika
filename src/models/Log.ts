@@ -20,48 +20,40 @@ import { Company } from './Company';
 @index({ createdAt: -1 })
 @index({ 'entity.type': 1, 'entity.id': 1 })
 export class Log {
-  @prop({ ref: () => Company, required: true, type: () => String })
+  @prop({ ref: () => Company, required: true })
   public company!: Ref<Company>;
 
-  @prop({ 
-    required: true, 
-    type: String,
-    enum: ['info', 'warning', 'error', 'debug'], 
-    default: 'info' 
-  })
+  @prop({ required: true, enum: ['info', 'warning', 'error', 'debug'], default: 'info' })
   public level!: 'info' | 'warning' | 'error' | 'debug';
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public message!: string;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public module!: string;
 
-  @prop({ required: true, trim: true, type: String })
+  @prop({ required: true, trim: true })
   public action!: string;
 
-  @prop({ ref: () => User, type: () => String })
+  @prop({ ref: () => User })
   public user?: Ref<User>;
 
   @prop({
-    type: Object,
-    schema: {
-      type: { type: String, trim: true },
-      id: { type: String }
-    }
+    type: { type: String, trim: true },
+    id: { type: String }
   })
   public entity?: {
     type: string;
     id: string;
   };
 
-  @prop({ type: Object })
+  @prop({ type: () => Object })
   public additionalData?: Record<string, any>;
 
-  @prop({ trim: true, type: String })
+  @prop({ trim: true })
   public ip?: string;
 
-  @prop({ trim: true, type: String })
+  @prop({ trim: true })
   public userAgent?: string;
 }
 
