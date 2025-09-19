@@ -1,4 +1,5 @@
 // src/models/Log.ts
+import 'reflect-metadata';
 import { prop, getModelForClass, modelOptions, Severity, index, type Ref } from '@typegoose/typegoose';
 import { User } from './User';
 import { Company } from './Company';

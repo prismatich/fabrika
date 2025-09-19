@@ -1,4 +1,5 @@
 // src/models/Ingredient.ts
+import 'reflect-metadata';
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 import type { Ref } from '@typegoose/typegoose';
 import { Company } from './Company';

@@ -1,4 +1,5 @@
 // src/models/Recipe.ts
+import 'reflect-metadata';
 import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
 import type { Ref } from '@typegoose/typegoose';
 import { User } from './User';
