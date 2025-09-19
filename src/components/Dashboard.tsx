@@ -33,9 +33,152 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
+// Tipos para los datos
+interface Customer {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  address?: string;
+  birthDate?: string;
+  gender?: string;
+  active: boolean;
+  createdAt: string;
+}
+
+interface Supplier {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address?: string;
+  city?: string;
+  active: boolean;
+  createdAt: string;
+}
+
+interface Branch {
+  id: string;
+  name: string;
+  code: string;
+  address: string;
+  city: string;
+  phone?: string;
+  email?: string;
+  active: boolean;
+  createdAt: string;
+}
+
 const Dashboard: React.FC = () => {
   const { user, logout, checkAuth, isLoading } = useAuthStore();
   const [activeMenu, setActiveMenu] = useState<string>("Inicio");
+  
+  // Estados para los datos
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [dataError, setDataError] = useState<string | null>(null);
+
+  // Funciones para obtener datos de las APIs
+  const fetchCustomers = async () => {
+    try {
+      const response = await fetch('/api/customers', {
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setCustomers(data.customers || []);
+        } else {
+          setDataError(data.message || 'Error al cargar clientes');
+        }
+      } else {
+        const errorData = await response.json();
+        setDataError(`Error ${response.status}: ${errorData.message || 'Error desconocido'}`);
+      }
+    } catch (error) {
+      console.error('Error al obtener clientes:', error);
+      setDataError('Error de conexión al obtener clientes');
+    }
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const response = await fetch('/api/suppliers', {
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setSuppliers(data.suppliers || []);
+        } else {
+          setDataError(data.message || 'Error al cargar proveedores');
+        }
+      } else {
+        const errorData = await response.json();
+        setDataError(`Error ${response.status}: ${errorData.message || 'Error desconocido'}`);
+      }
+    } catch (error) {
+      console.error('Error al obtener proveedores:', error);
+      setDataError('Error de conexión al obtener proveedores');
+    }
+  };
+
+  const fetchBranches = async () => {
+    try {
+      const response = await fetch('/api/branches', {
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setBranches(data.branches || []);
+        } else {
+          setDataError(data.message || 'Error al cargar sucursales');
+        }
+      } else {
+        const errorData = await response.json();
+        setDataError(`Error ${response.status}: ${errorData.message || 'Error desconocido'}`);
+      }
+    } catch (error) {
+      console.error('Error al obtener sucursales:', error);
+      setDataError('Error de conexión al obtener sucursales');
+    }
+  };
+
+  const fetchAllData = async () => {
+    setDataLoading(true);
+    setDataError(null);
+    
+    try {
+      await Promise.all([
+        fetchCustomers(),
+        fetchSuppliers(),
+        fetchBranches()
+      ]);
+    } catch (error) {
+      setDataError('Error al cargar los datos');
+      console.error('Error al cargar datos:', error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
 
   // Verificar autenticación al cargar el componente
   useEffect(() => {
@@ -47,30 +190,48 @@ const Dashboard: React.FC = () => {
       
       if (!currentUser) {
         window.location.href = '/';
+      } else {
+        // Cargar datos después de autenticación exitosa
+        fetchAllData();
       }
     };
     verifyAuth();
   }, [checkAuth]);
+
+  // Cargar datos cuando el usuario esté disponible
+  useEffect(() => {
+    if (user && !dataLoading) {
+      // Esperar un poco para que las cookies se establezcan correctamente
+      setTimeout(() => {
+        fetchAllData();
+      }, 1000);
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     await logout();
     window.location.href = '/';
   };
 
-  const clientes = [
-    { nombre: "Carlos Flores", estado: "En línea" },
-    { nombre: "Junior Garcia", estado: "Conectado hace 2 min" },
-    { nombre: "Sebastian Mora", estado: "Conectado hace 5 min" },
-    { nombre: "Julio Molina", estado: "Conectado hace 1 hora" },
-  ];
-  const proveedores = [
-    { nombre: "Yohan Quintero", estado: "Conectado hace 3 h" },
-    { nombre: "Sol Miranda", estado: "Conectado hace 2 días" },
-  ];
-  const sucursales = [
-    { nombre: "Sucursal Norte", estado: "Activo" },
-    { nombre: "Sucursal Centro", estado: "Activo" },
-  ];
+  // Función para manejar el cambio de menú
+  const handleMenuChange = (menu: string) => {
+    setActiveMenu(menu);
+    
+    // Cargar datos específicos según el menú seleccionado
+    switch (menu) {
+      case "Clientes":
+        fetchCustomers();
+        break;
+      case "Proveedores":
+        fetchSuppliers();
+        break;
+      case "Sucursales":
+        fetchBranches();
+        break;
+      default:
+        break;
+    }
+  };
 
   const menuItems = [
     { icon: Menu, label: "Inicio" },
@@ -130,7 +291,7 @@ const Dashboard: React.FC = () => {
                     variant="light"
                     className={`flex items-center gap-3 justify-start w-full hover:bg-gray-100
                       ${activeMenu === label ? "bg-gray-200 text-blue-600 font-semibold" : ""}`}
-                    onClick={() => setActiveMenu(label)}
+                    onClick={() => handleMenuChange(label)}
                   >
                     <Icon size={20} />
                     {label}
@@ -319,48 +480,89 @@ const Dashboard: React.FC = () => {
 
             {/* Sidebar derecho */}
             <div className="w-64 flex flex-col gap-4">
+              {dataError && (
+                <Card className="bg-red-50 border-red-200">
+                  <CardBody className="text-red-600 text-sm">
+                    ⚠️ {dataError}
+                  </CardBody>
+                </Card>
+              )}
+              
               <Card className="flex-1">
-                <CardHeader className="font-bold">Clientes</CardHeader>
-                <CardBody className="flex flex-col gap-2">
-                  {clientes.map((c) => (
-                    <div key={c.nombre} className="flex items-center gap-2">
-                      <Avatar name={c.nombre} size="sm" />
-                      <div>
-                        <p className="font-medium text-sm">{c.nombre}</p>
-                        <p className="text-xs text-gray-500">{c.estado}</p>
+                <CardHeader className="font-bold">Clientes ({customers.length})</CardHeader>
+                <CardBody className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                  {dataLoading ? (
+                    <div className="text-center text-gray-500">Cargando...</div>
+                  ) : customers.length > 0 ? (
+                    customers.slice(0, 5).map((customer) => (
+                      <div key={customer.id} className="flex items-center gap-2">
+                        <Avatar name={customer.name} size="sm" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{customer.name}</p>
+                          <p className="text-xs text-gray-500 truncate">{customer.email}</p>
+                        </div>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          customer.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {customer.active ? 'Activo' : 'Inactivo'}
+                        </span>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div className="text-center text-gray-500">No hay clientes</div>
+                  )}
                 </CardBody>
               </Card>
 
               <Card>
-                <CardHeader className="font-bold">Proveedores</CardHeader>
-                <CardBody className="flex flex-col gap-2">
-                  {proveedores.map((p) => (
-                    <div key={p.nombre} className="flex items-center gap-2">
-                      <Avatar name={p.nombre} size="sm" />
-                      <div>
-                        <p className="font-medium text-sm">{p.nombre}</p>
-                        <p className="text-xs text-gray-500">{p.estado}</p>
+                <CardHeader className="font-bold">Proveedores ({suppliers.length})</CardHeader>
+                <CardBody className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                  {dataLoading ? (
+                    <div className="text-center text-gray-500">Cargando...</div>
+                  ) : suppliers.length > 0 ? (
+                    suppliers.slice(0, 5).map((supplier) => (
+                      <div key={supplier.id} className="flex items-center gap-2">
+                        <Avatar name={supplier.name} size="sm" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{supplier.name}</p>
+                          <p className="text-xs text-gray-500 truncate">{supplier.email}</p>
+                        </div>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          supplier.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {supplier.active ? 'Activo' : 'Inactivo'}
+                        </span>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div className="text-center text-gray-500">No hay proveedores</div>
+                  )}
                 </CardBody>
               </Card>
 
               <Card>
-                <CardHeader className="font-bold">Sucursales</CardHeader>
-                <CardBody className="flex flex-col gap-2">
-                  {sucursales.map((s) => (
-                    <div key={s.nombre} className="flex items-center gap-2">
-                      <Avatar name={s.nombre} size="sm" />
-                      <div>
-                        <p className="font-medium text-sm">{s.nombre}</p>
-                        <p className="text-xs text-gray-500">{s.estado}</p>
+                <CardHeader className="font-bold">Sucursales ({branches.length})</CardHeader>
+                <CardBody className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                  {dataLoading ? (
+                    <div className="text-center text-gray-500">Cargando...</div>
+                  ) : branches.length > 0 ? (
+                    branches.slice(0, 5).map((branch) => (
+                      <div key={branch.id} className="flex items-center gap-2">
+                        <Avatar name={branch.name} size="sm" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{branch.name}</p>
+                          <p className="text-xs text-gray-500 truncate">{branch.city}</p>
+                        </div>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          branch.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {branch.active ? 'Activo' : 'Inactivo'}
+                        </span>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div className="text-center text-gray-500">No hay sucursales</div>
+                  )}
                 </CardBody>
               </Card>
             </div>

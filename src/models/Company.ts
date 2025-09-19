@@ -47,7 +47,7 @@ export class Company {
   public taxId?: string; // RFC, CUIT, etc.
 
   @prop({ 
-    type: String, 
+    type: String,
     enum: Object.values(SubscriptionStatus), 
     default: SubscriptionStatus.ACTIVE 
   })
@@ -66,7 +66,7 @@ export class Company {
   public subscriptionCurrency?: string; // USD, MXN, etc.
 
   @prop({ 
-    type: String, 
+    type: String,
     enum: Object.values(PaymentStatus), 
     default: PaymentStatus.PENDING 
   })
@@ -83,9 +83,6 @@ export class Company {
 
   @prop({ default: true, type: Boolean })
   public active!: boolean;
-
-  @prop({ type: Object })
-  public additionalData?: Record<string, any>;
 
   // Método para verificar si la suscripción está activa
   public isSubscriptionActive(): boolean {
