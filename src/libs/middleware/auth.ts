@@ -2,13 +2,14 @@
 import jwt from 'jsonwebtoken';
 import type { APIRoute } from 'astro';
 import { UserModel, UserRole } from '../../models/User';
+import connectToMongoDB from '../mongoose';
 
 export interface AuthUser {
   id: string;
   name: string;
   email: string;
   role: UserRole;
-  companyId: string;
+  companyId?: string;
 }
 
 // Configuración JWT
@@ -55,25 +56,32 @@ export function createSessionCookie(token: string): string {
   const expires = new Date(Date.now() + COOKIE_MAX_AGE);
   const isProduction = process.env.NODE_ENV === 'production';
   
-  return `${COOKIE_NAME}=${token}; HttpOnly; ${isProduction ? 'Secure;' : ''} SameSite=Strict; Path=/; Expires=${expires.toUTCString()}`;
+  return `${COOKIE_NAME}=${token}; HttpOnly; ${isProduction ? 'Secure;' : ''} SameSite=Lax; Path=/; Expires=${expires.toUTCString()}`;
 }
 
 // Crear cookie de logout
 export function createLogoutCookie(): string {
   const isProduction = process.env.NODE_ENV === 'production';
-  return `${COOKIE_NAME}=; HttpOnly; ${isProduction ? 'Secure;' : ''} SameSite=Strict; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  return `${COOKIE_NAME}=; HttpOnly; ${isProduction ? 'Secure;' : ''} SameSite=Lax; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 }
 
 // Función para extraer cookies del request
 export function getCookieValue(request: Request, cookieName: string): string | null {
   const cookies = request.headers.get('cookie');
-  if (!cookies) return null;
+  if (!cookies) {
+    return null;
+  }
   
   const cookie = cookies
     .split(';')
     .find(c => c.trim().startsWith(`${cookieName}=`));
     
-  return cookie ? cookie.split('=')[1] : null;
+  if (!cookie) {
+    return null;
+  }
+  
+  const value = cookie.split('=')[1];
+  return value;
 }
 
 // Middleware de autenticación
@@ -90,19 +98,34 @@ export async function requireAuth(request: Request): Promise<{ user: AuthUser | 
     if (!user) {
       return { user: null, error: 'Token inválido o expirado' };
     }
-
+    
     // Verificar que el usuario aún existe en la base de datos
-    const dbUser = await UserModel.findById(user.id).populate('company');
-    if (!dbUser) {
-      return { user: null, error: 'Usuario no encontrado' };
+    try {
+      // Asegurar conexión a MongoDB
+      await connectToMongoDB();
+      
+      // Buscar usuario por ID
+      const dbUser = await UserModel.findById(user.id).populate('company');
+      
+      if (!dbUser) {
+        // Intentar buscar por email como fallback
+        const dbUserByEmail = await UserModel.findOne({ email: user.email }).populate('company');
+        if (dbUserByEmail) {
+          user.id = dbUserByEmail._id.toString();
+          user.companyId = dbUserByEmail.company ? dbUserByEmail.company.toString() : undefined;
+        } else {
+          return { user: null, error: 'Usuario no encontrado' };
+        }
+      } else {
+        // Actualizar el companyId del usuario autenticado
+        user.companyId = dbUser.company ? dbUser.company.toString() : undefined;
+      }
+    } catch (dbError: any) {
+      return { user: null, error: 'Error al verificar usuario en la base de datos' };
     }
 
-    // Actualizar el companyId del usuario autenticado
-    user.companyId = dbUser.company.toString();
-
     return { user };
-  } catch (error) {
-    console.error('Error en middleware de autenticación:', error);
+  } catch (error: any) {
     return { user: null, error: 'Error interno de autenticación' };
   }
 }
@@ -134,7 +157,7 @@ export function requireAdmin() {
 
 // Verificar si el usuario es admin de sucursal o superior
 export function requireAdminSucursal() {
-  return requireRole([UserRole.ADMIN, UserRole.AdminSucursal, UserRole.SUPERADMIN]);
+  return requireRole([UserRole.ADMIN, UserRole.ADMIN_SUCURSAL, UserRole.SUPERADMIN]);
 }
 
 // Verificar si el usuario es superadmin
@@ -186,22 +209,52 @@ export const withAuth = (handler: APIRoute): APIRoute => {
  */
 export const withRole = (allowedRoles: string[]) => {
     return (handler: APIRoute): APIRoute => {
-        return withAuth(async (context) => {
-            const user = (context as any).user;
-            
-            if (!allowedRoles.includes(user.role)) {
+        return async (context) => {
+            try {
+                // Verificar autenticación
+                const authResult = await requireAuth(context.request);
+                
+                if (!authResult.user) {
+                    return new Response(JSON.stringify({
+                        success: false,
+                        message: authResult.error || 'No autorizado'
+                    }), {
+                        status: 401,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                }
+
+                // Verificar rol
+                if (!allowedRoles.includes(authResult.user.role)) {
+                    return new Response(JSON.stringify({
+                        success: false,
+                        message: 'No tienes permisos para realizar esta acción'
+                    }), {
+                        status: 403,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                }
+
+                // Agregar el usuario autenticado al contexto
+                (context as any).user = authResult.user;
+                
+                // Ejecutar el handler original
+                return await handler(context);
+            } catch (error: any) {
                 return new Response(JSON.stringify({
                     success: false,
-                    message: 'No tienes permisos para realizar esta acción'
+                    message: 'Error de autenticación'
                 }), {
-                    status: 403,
+                    status: 500,
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
             }
-
-            return await handler(context);
-        });
+        };
     };
 };

@@ -34,73 +34,74 @@ export interface InvoiceItem {
 @index({ invoiceDate: -1 })
 @index({ createdAt: -1 })
 export class Invoice {
-  @prop({ ref: () => Company, required: true })
+  @prop({ ref: () => Company, required: true, type: () => String })
   public company!: Ref<Company>;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public invoiceNumber!: string; // Número de factura único
 
-  @prop({ ref: () => Supplier, required: true })
+  @prop({ ref: () => Supplier, required: true, type: () => String })
   public supplier!: Ref<Supplier>;
 
-  @prop({ ref: () => Branch, required: true })
+  @prop({ ref: () => Branch, required: true, type: () => String })
   public branch!: Ref<Branch>;
 
-  @prop({ ref: () => User, required: true })
+  @prop({ ref: () => User, required: true, type: () => String })
   public createdBy!: Ref<User>; // Usuario que creó la factura
 
-  @prop({ required: true })
+  @prop({ required: true, type: Date })
   public invoiceDate!: Date; // Fecha de la factura
 
-  @prop({ required: true })
+  @prop({ required: true, type: Date })
   public dueDate!: Date; // Fecha de vencimiento
 
-  @prop({ type: () => [Object], required: true })
+  @prop({ type: [Object], required: true })
   public items!: InvoiceItem[]; // Items de la factura
 
-  @prop({ required: true, min: 0 })
+  @prop({ required: true, min: 0, type: Number })
   public subtotal!: number; // Subtotal sin impuestos
 
-  @prop({ required: true, min: 0, default: 0 })
+  @prop({ required: true, min: 0, default: 0, type: Number })
   public taxAmount!: number; // Monto de impuestos
 
-  @prop({ required: true, min: 0, default: 0 })
+  @prop({ required: true, min: 0, default: 0, type: Number })
   public discountAmount!: number; // Monto de descuento
 
-  @prop({ required: true, min: 0 })
+  @prop({ required: true, min: 0, type: Number })
   public totalAmount!: number; // Monto total de la factura
 
   @prop({ 
+    type: String,
     enum: ['pending', 'approved', 'rejected', 'paid', 'cancelled'], 
     default: 'pending' 
   })
   public status!: 'pending' | 'approved' | 'rejected' | 'paid' | 'cancelled';
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public notes?: string; // Notas adicionales
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public paymentMethod?: string; // Método de pago
 
-  @prop()
+  @prop({ type: Date })
   public paymentDate?: Date; // Fecha de pago
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public paymentReference?: string; // Referencia de pago
 
-  @prop({ ref: () => User })
+  @prop({ ref: () => User, type: () => String })
   public approvedBy?: Ref<User>; // Usuario que aprobó la factura
 
-  @prop()
+  @prop({ type: Date })
   public approvedAt?: Date; // Fecha de aprobación
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public rejectionReason?: string; // Razón de rechazo si aplica
 
-  @prop({ default: true })
+  @prop({ default: true, type: Boolean })
   public active!: boolean;
 
-  @prop({ type: () => Object })
+  @prop({ type: Object })
   public additionalData?: Record<string, any>;
 }
 

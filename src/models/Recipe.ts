@@ -28,40 +28,40 @@ export interface RecipeIngredient {
 @index({ difficulty: 1 })
 @index({ preparationTime: 1 })
 export class Recipe {
-  @prop({ ref: () => Company, required: true })
+  @prop({ ref: () => Company, required: true, type: () => String })
   public company!: Ref<Company>;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public name!: string;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public description!: string;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public instructions!: string;
 
-  @prop({ required: true, min: 1 })
+  @prop({ required: true, min: 1, type: Number })
   public preparationTime!: number; // en minutos
 
-  @prop({ required: true, min: 1 })
+  @prop({ required: true, min: 1, type: Number })
   public servings!: number;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public category!: string;
 
-  @prop({ ref: () => User })
+  @prop({ ref: () => User, type: () => String })
   public creator?: Ref<User>;
 
-  @prop({ default: true })
+  @prop({ default: true, type: Boolean })
   public active!: boolean;
 
-  @prop({ type: () => [Object] })
+  @prop({ type: [Object] })
   public ingredients?: RecipeIngredient[];
 
-  @prop({ default: Date.now })
+  @prop({ default: Date.now, type: Date })
   public createdAt!: Date;
 
-  @prop({ default: Date.now })
+  @prop({ default: Date.now, type: Date })
   public updatedAt!: Date;
 }
 
