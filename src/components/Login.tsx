@@ -22,11 +22,17 @@ const Login: React.FC = () => {
       return;
     }
 
-    const success = await login(email, password);
-    
-    if (success) {
-      // Redirigir al dashboard o página principal
-      window.location.href = '/admin';
+    try {
+      const success = await login(email, password);
+      
+      if (success) {
+        // Pequeña pausa para asegurar que el estado se actualice
+        setTimeout(() => {
+          window.location.href = '/admin';
+        }, 100);
+      }
+    } catch (error) {
+      console.error('Error en el login:', error);
     }
   };
 

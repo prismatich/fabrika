@@ -96,7 +96,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       
       if (response.ok) {
         const data = await response.json();
-        set({ user: data.user, isLoading: false });
+        if (data.success && data.user) {
+          set({ user: data.user, isLoading: false });
+        } else {
+          set({ user: null, isLoading: false });
+        }
       } else {
         set({ user: null, isLoading: false });
       }
