@@ -1,13 +1,13 @@
 // src/pages/api/companies/[id]/subscription-status.ts
 import type { APIRoute } from 'astro';
 import { CompanyModel } from '../../../../models';
-import connectDB from '../../../../libs/mongoose';
+import connectToMongoDB from '../../../../libs/mongoose';
 import { Types } from 'mongoose';
 import { withRole } from '../../../../libs/middleware/auth';
 
 const getSubscriptionStatusHandler: APIRoute = async ({ params }) => {
   try {
-    await connectDB();
+    await connectToMongoDB();
     
     const { id } = params;
     

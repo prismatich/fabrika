@@ -82,10 +82,16 @@ export const POST: APIRoute = async ({ request }) => {
             name: user.name,
             email: user.email,
             role: user.role,
-            companyId: user.company.toString()
+            companyId: user.company ? user.company.toString() : null
         };
         
-        const token = generateToken(authUser);
+        // Asegurarse de que companyId sea un string válido o undefined (no null)
+        const authUserForToken = {
+            ...authUser,
+            companyId: authUser.companyId || undefined
+        };
+
+        const token = generateToken(authUserForToken);
         const sessionCookie = createSessionCookie(token);
 
         return new Response(JSON.stringify({

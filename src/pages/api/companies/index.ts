@@ -1,7 +1,7 @@
 // src/pages/api/companies/index.ts
 import type { APIRoute } from 'astro';
 import { CompanyModel } from '../../../models';
-import { connectDB } from '../../../libs/mongoose';
+import connectToMongoDB from '../../../libs/mongoose';
 import { z } from 'zod';
 import { withRole } from '../../../libs/middleware/auth';
 
@@ -23,7 +23,7 @@ const updateCompanySchema = createCompanySchema.partial();
 
 const getCompaniesHandler: APIRoute = async ({ request }) => {
   try {
-    await connectDB();
+    await connectToMongoDB();
     
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1');
@@ -84,7 +84,7 @@ const getCompaniesHandler: APIRoute = async ({ request }) => {
 
 const createCompanyHandler: APIRoute = async ({ request }) => {
   try {
-    await connectDB();
+    await connectToMongoDB();
     
     const body = await request.json();
     const validatedData = createCompanySchema.parse(body);

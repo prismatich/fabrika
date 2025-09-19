@@ -18,15 +18,39 @@ import {
   BarChart3,
   ClipboardList,
   KeyRound,
+  LogOut,
   Menu,
   Package,
   Repeat,
   ShoppingCart,
   User,
 } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const Dashboard: React.FC = () => {
+  const { user, logout, checkAuth, isLoading } = useAuthStore();
+
+  // Verificar autenticación al cargar el componente
+  useEffect(() => {
+    const verifyAuth = async () => {
+      await checkAuth();
+      
+      // Después de checkAuth, verificar si hay usuario
+      const currentUser = useAuthStore.getState().user;
+      
+      if (!currentUser) {
+        window.location.href = '/';
+      }
+    };
+    verifyAuth();
+  }, [checkAuth]);
+
+  const handleLogout = async () => {
+    await logout();
+    window.location.href = '/';
+  };
+
   const menuItems = [
     { icon: BarChart3, label: "Estadísticas" },
     { icon: Package, label: "Inventario" },
@@ -37,6 +61,30 @@ const Dashboard: React.FC = () => {
     { icon: Menu, label: "Registros" },
     { icon: KeyRound, label: "Administración" },
   ];
+
+  // Mostrar loading mientras se verifica la autenticación
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario, mostrar loading (se redirigirá después de checkAuth)
+  if (!user) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <HeroUIProvider>
@@ -62,10 +110,21 @@ const Dashboard: React.FC = () => {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
           <header className="flex items-center justify-between bg-white shadow px-6 py-4">
-            <h2 className="text-lg font-semibold">Bienvenido a SCI</h2>
+            <h2 className="text-lg font-semibold">Bienvenido, {user.name}</h2>
             <div className="flex items-center gap-4">
               <Input placeholder="Buscar..." size="sm" className="w-48" />
-              <Avatar name="Admin" />
+              <div className="flex items-center gap-2">
+                <Avatar name={user.name} />
+                <Button
+                  variant="light"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  <LogOut size={16} />
+                  Cerrar Sesión
+                </Button>
+              </div>
             </div>
           </header>
           <main className="flex-1 overflow-y-auto p-6 bg-[#F6F4F4]">

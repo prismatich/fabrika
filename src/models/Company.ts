@@ -1,6 +1,5 @@
 // src/models/Company.ts
-import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
-import { Types } from 'mongoose';
+import { prop, getModelForClass, modelOptions, Severity } from '@typegoose/typegoose';
 
 export enum SubscriptionStatus {
   ACTIVE = 'active',
@@ -25,70 +24,67 @@ export enum PaymentStatus {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ name: 1 })
-@index({ email: 1 })
-@index({ subscriptionStatus: 1 })
 export class Company {
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public name!: string;
 
-  @prop({ required: true, unique: true, trim: true, lowercase: true })
+  @prop({ required: true, unique: true, trim: true, lowercase: true, type: String })
   public email!: string;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public phone!: string;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public address!: string;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public city!: string;
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public country?: string;
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public taxId?: string; // RFC, CUIT, etc.
 
   @prop({ 
     type: String, 
-    enum: SubscriptionStatus, 
+    enum: Object.values(SubscriptionStatus), 
     default: SubscriptionStatus.ACTIVE 
   })
   public subscriptionStatus!: SubscriptionStatus;
 
-  @prop({ default: Date.now })
+  @prop({ default: Date.now, type: Date })
   public subscriptionStartDate!: Date;
 
-  @prop()
+  @prop({ type: Date })
   public subscriptionEndDate?: Date;
 
-  @prop({ default: 0 })
+  @prop({ default: 0, type: Number })
   public subscriptionAmount!: number; // Monto de la suscripción
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public subscriptionCurrency?: string; // USD, MXN, etc.
 
   @prop({ 
     type: String, 
-    enum: PaymentStatus, 
+    enum: Object.values(PaymentStatus), 
     default: PaymentStatus.PENDING 
   })
   public paymentStatus!: PaymentStatus;
 
-  @prop()
+  @prop({ type: Date })
   public lastPaymentDate?: Date;
 
-  @prop()
+  @prop({ type: Date })
   public nextPaymentDate?: Date;
 
-  @prop({ trim: true })
+  @prop({ trim: true, type: String })
   public paymentReference?: string; // Referencia del pago (número de transacción, etc.)
 
-  @prop({ default: true })
+  @prop({ default: true, type: Boolean })
   public active!: boolean;
 
-  @prop({ type: () => Object })
+  @prop({ type: Object })
   public additionalData?: Record<string, any>;
 
   // Método para verificar si la suscripción está activa

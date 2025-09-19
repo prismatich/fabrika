@@ -1,5 +1,5 @@
 // src/models/User.ts
-import { prop, getModelForClass, modelOptions, Severity, index } from '@typegoose/typegoose';
+import { prop, getModelForClass, modelOptions, Severity } from '@typegoose/typegoose';
 import type { Ref } from '@typegoose/typegoose';
 import { Company } from './Company';
 
@@ -19,29 +19,27 @@ export enum UserRole {
     allowMixed: Severity.ALLOW
   }
 })
-@index({ company: 1 })
-@index({ email: 1, company: 1 }, { unique: true })
 export class User {
-  @prop({ ref: () => Company, required: true })
+  @prop({ ref: () => Company, required: true, type: () => String })
   public company!: Ref<Company>;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: String })
   public name!: string;
 
-  @prop({ required: true, trim: true, lowercase: true })
+  @prop({ required: true, trim: true, lowercase: true, type: String })
   public email!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, type: String })
   public password!: string;
 
   @prop({ 
     type: String, 
-    enum: UserRole, 
+    enum: Object.values(UserRole), 
     default: UserRole.USER 
   })
   public role!: UserRole;
 
-  @prop()
+  @prop({ type: Date })
   public lastLogin?: Date;
 }
 

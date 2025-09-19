@@ -11,8 +11,8 @@ import "../styles/global.css";
     <meta name="generator" content={Astro.generator} />
     <title>Fabrika</title>
   </head>
-  <body class="bg-gray-100 p-6">
-    <Dashboard client:load />
+  <body>
+    <Dashboard client:only="react" />
   </body>
 </html>
 

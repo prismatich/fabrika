@@ -1,7 +1,7 @@
 // src/pages/api/companies/[id].ts
 import type { APIRoute } from 'astro';
 import { CompanyModel } from '../../../models';
-import connectDB from '../../../libs/mongoose';
+import connectToMongoDB from '../../../libs/mongoose';
 import { z } from 'zod';
 import { Types } from 'mongoose';
 import { withRole } from '../../../libs/middleware/auth';
@@ -31,7 +31,7 @@ const renewSubscriptionSchema = z.object({
 
 const getCompanyHandler: APIRoute = async ({ params }) => {
   try {
-    await connectDB();
+    await connectToMongoDB();
     
     const { id } = params;
     
@@ -79,7 +79,7 @@ const getCompanyHandler: APIRoute = async ({ params }) => {
 
 const updateCompanyHandler: APIRoute = async ({ params, request }) => {
   try {
-    await connectDB();
+    await connectToMongoDB();
     
     const { id } = params;
     
@@ -167,7 +167,7 @@ const updateCompanyHandler: APIRoute = async ({ params, request }) => {
 
 const deleteCompanyHandler: APIRoute = async ({ params }) => {
   try {
-    await connectDB();
+    await connectToMongoDB();
     
     const { id } = params;
     
